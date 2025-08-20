@@ -23,6 +23,10 @@ const eslintConfig = [
       "no-unused-vars": "off",
       "no-undef": "off",
       "no-redeclare": "off",
+      "@typescript-eslint/no-unused-expressions": "off",
+      "@typescript-eslint/no-this-alias": "off",
+      "@typescript-eslint/no-empty-object-type": "off",
+      "@typescript-eslint/no-unsafe-function-type": "off",
     },
   },
 ];
