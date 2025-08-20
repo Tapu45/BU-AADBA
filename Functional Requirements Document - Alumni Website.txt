@@ -1,0 +1,123 @@
+﻿Functional Requirements Document (FRD) for University Alumni Website
+1. Project Overview
+The University Alumni Website will serve as a digital bridge between the university and its alumni. The platform will enable alumni to stay connected, participate in events, contribute to development, and create opportunities for networking and careers.
+The website will be responsive, secure, and scalable, built with user experience in mind.
+
+2. Core Objectives
+* Strengthen alumni-university engagement
+* Provide networking opportunities for alumni and students
+* Showcase alumni achievements and notable contributions
+* Promote events, news, and publications
+* Encourage donations and sponsorships
+* Serve as a digital repository for newsletters, magazines, and placement brochures
+
+3. User Roles & Permissions
+1. Guest Users (Public)
+o Can view About Us, Events, Notable Alumni, and Public Newsletters/Magazines.
+o Can see photo galleries and read open announcements.
+2. Registered Alumni Members
+o Can create/update personal profiles.
+o Access Alumni Directory.
+o Register for events and career opportunities.
+o Receive newsletters and exclusive content.
+o Apply for/renew memberships.
+o Donate securely.
+3. University Admin / Alumni Executive Body
+o Manage alumni database and membership status.
+o Approve new alumni registrations.
+o Upload newsletters, magazines, brochures, and event details.
+o Manage donations and acknowledgments.
+o Approve career opportunities/job postings.
+o Moderate photo galleries and social media feeds.
+
+4. Website Information Architecture (Main Navigation)
+Button 1: About Us
+* Subsections:
+o About Alumni Association (History & Overview)
+o Department Profiles (individual department introductions with HOD's message)
+o Mission & Vision
+o Executive Body (President, Secretary, Committee Members with photos & bios)
+
+Button 2: Events
+* Upcoming Events (seminars, reunions, convocations, webinars)
+* Past Events (archive with photos/videos)
+* Event Registration (form + payment gateway if needed)
+* Calendar View (month-wise)
+
+Button 3: Alumni Publications
+* Alumni Profiles (spotlight stories, interviews, career journeys)
+* Newsletter (PDFs + archive by year/edition)
+* Magazine (interactive flipbook or downloadable PDF)
+* Placement Brochure (annual university placement reports, downloadable PDFs)
+
+Button 4: Membership
+* Membership Tiers (Life, Annual, Student, Honorary)
+* Benefits of Membership
+* Online Membership Registration (form + payment integration)
+* Membership Renewal Process
+* FAQs
+
+Button 5: Photo Gallery
+* Albums (categorized by events, reunions, convocations, department activities)
+* Lightbox View for easy browsing
+* Video Gallery (YouTube/Vimeo embedded)
+
+Button 6: Alumni Directory
+* Search & Filter (by Name, Batch, Department, City, Profession)
+* Profile Cards (photo, name, batch, profession, contact option*)
+* Privacy Control (alumni choose which fields are public/private)
+
+Button 7: Donations
+* Donation Categories (Scholarships, Infrastructure, Research Fund, Student Welfare)
+* Online Donation System (UPI, Credit/Debit Card, Net Banking, PayPal/Stripe)
+* Donor Acknowledgment (thank-you letter, donor wall display on site)
+* Tax Receipt Generation (auto-generated PDF/email)
+
+Button 8: Career Opportunities
+* Job Board (openings posted by alumni/university/partners)
+* Internship Opportunities for students
+* Resume Upload / Job Application
+* Employer Section (alumni-owned businesses posting jobs)
+
+Button 9: Notable Alumni
+* Success Stories (alumni in leadership, academia, government, entrepreneurship, etc.)
+* Hall of Fame Section (with photos, bios, achievements)
+* Alumni Awards Showcase
+
+Button 10: Social Media Integration
+* Live Feeds (Twitter/X, LinkedIn, Instagram)
+* Social Media Tags (official hashtags for events)
+* Share Buttons on all content pages
+* Embedded YouTube playlist for alumni talks and lectures
+
+5. Homepage Structure
+* Top Banner - University + Alumni Association Branding
+* Message Section - Messages from President, Secretary, Vice-Chancellor, Dean
+* Quick Links - Membership, Events, Donate, Alumni Directory
+* Highlights - Upcoming Events, Notable Alumni, Latest Publications
+* Photo Carousel - Featured images from past events
+* Footer - Contact Info, Sitemap, Social Media Icons, Newsletter Signup
+
+6. Technical Requirements
+* Platform: WordPress/Drupal/Laravel/React-based CMS (scalable choice)
+* Database: MySQL/PostgreSQL (for alumni records, event registration, donations)
+* Security: SSL Encryption, Data Privacy Compliance (GDPR/Indian IT Act)
+* Payment Integration: Razorpay/Stripe/PayPal for donations & memberships
+* Email Integration: SendGrid/Mailchimp for newsletters and announcements
+* Search & Filters: ElasticSearch or built-in advanced filtering for directory
+* Analytics: Google Analytics 4 (event tracking, alumni engagement stats)
+
+7. Non-Functional Requirements
+* Responsiveness: Mobile, tablet, desktop friendly
+* Scalability: Should handle 50,000+ alumni records
+* Performance: Pages load under 3 seconds
+* Accessibility: WCAG 2.1 compliance (for differently-abled users)
+* SEO Optimized: Meta tags, structured data, sitemap integration
+
+8. Future Enhancements (Phase 2)
+* Mobile App Integration (Android/iOS Alumni App)
+* AI-powered Networking (match alumni with students based on interests/skills)
+* Online Mentorship Program
+* Virtual Event Hosting (Zoom/MS Teams integration)
+* Blockchain-based Digital Certificates for Alumni Achievements
+

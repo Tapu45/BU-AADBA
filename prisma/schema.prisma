@@ -1,0 +1,535 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+// User roles and authentication
+model User {
+  id                  String           @id @default(cuid())
+  email               String           @unique
+  password            String
+  role                UserRole         @default(ALUMNI)
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+  isVerified          Boolean          @default(false)
+  verificationToken   String?
+  passwordResetToken  String?
+  passwordResetExpires DateTime?
+  lastLogin           DateTime?
+  
+  // Relations
+  alumniProfile       AlumniProfile?
+  adminProfile        AdminProfile?
+  eventRegistrations  EventRegistration[]
+  donations           Donation[]
+  jobApplications     JobApplication[]
+  memberships         Membership[]
+  postedJobs          Job[]            @relation("JobPoster")
+
+  @@map("users")
+}
+
+enum UserRole {
+  GUEST
+  ALUMNI
+  ADMIN
+  EXECUTIVE
+}
+
+// Alumni specific information
+model AlumniProfile {
+  id                String          @id @default(cuid())
+  userId            String          @unique
+  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  firstName         String
+  lastName          String
+  gender            Gender?
+  dateOfBirth       DateTime?
+  graduationYear    Int
+  department        String
+  degree            String
+  rollNumber        String?
+  currentCompany    String?
+  designation       String?
+  industry          String?
+  location          String?
+  city              String?
+  state             String?
+  country           String?
+  bio               String?         @db.Text
+  achievements      String?         @db.Text
+  linkedInUrl       String?
+  twitterUrl        String?
+  facebookUrl       String?
+  instagramUrl      String?
+  websiteUrl        String?
+  phoneNumber       String?
+  alternateEmail    String?
+  profileImage      String?
+  coverImage        String?
+  isNotable         Boolean         @default(false)
+  isHallOfFame      Boolean         @default(false)
+  notableCategory   NotableCategory? @relation(fields: [notableCategoryId], references: [id])
+  notableCategoryId String?
+  privacySettings   Json            @default("{\"showEmail\": false, \"showPhone\": false, \"showLocation\": true, \"showWorkInfo\": true}")
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  isActive          Boolean         @default(true)
+  
+  // Relations
+  successStory      SuccessStory?
+  
+  @@map("alumni_profiles")
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+  PREFER_NOT_TO_SAY
+}
+
+// Admin and Executive body members
+model AdminProfile {
+  id                String          @id @default(cuid())
+  userId            String          @unique
+  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  firstName         String
+  lastName          String
+  position          String
+  department        String?
+  bio               String?         @db.Text
+  phoneNumber       String?
+  profileImage      String?
+  isExecutive       Boolean         @default(false)
+  executiveRole     String?
+  executiveOrder    Int?            @default(999) // For ordering in executive body display
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  
+  @@map("admin_profiles")
+}
+
+// Department information
+model Department {
+  id                String          @id @default(cuid())
+  name              String          @unique
+  code              String          @unique
+  description       String?         @db.Text
+  hodMessage        String?         @db.Text
+  hodName           String?
+  hodImage          String?
+  establishedYear   Int?
+  website           String?
+  email             String?
+  phoneNumber       String?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  
+  @@map("departments")
+}
+
+// Events management
+model Event {
+  id                String          @id @default(cuid())
+  title             String
+  description       String          @db.Text
+  eventType         EventType
+  startDate         DateTime
+  endDate           DateTime
+  location          String?
+  venue             String?
+  isOnline          Boolean         @default(false)
+  meetingLink       String?
+  meetingPassword   String?
+  capacity          Int?
+  registrationFee   Float?
+  registrationStartDate DateTime?
+  registrationEndDate   DateTime?
+  isFeatured        Boolean         @default(false)
+  coverImage        String?
+  createdBy         String?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  isPublished       Boolean         @default(false)
+
+  // Relations
+  registrations     EventRegistration[]
+  gallery           PhotoAlbum?     @relation(fields: [albumId], references: [id])
+  albumId           String?
+  
+  @@map("events")
+}
+
+enum EventType {
+  SEMINAR
+  REUNION
+  CONVOCATION
+  WEBINAR
+  WORKSHOP
+  MEETUP
+  CONFERENCE
+  OTHER
+}
+
+model EventRegistration {
+  id                String          @id @default(cuid())
+  eventId           String
+  event             Event           @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  userId            String
+  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  registrationDate  DateTime        @default(now())
+  paymentStatus     PaymentStatus   @default(PENDING)
+  paymentId         String?
+  amountPaid        Float?
+  attendanceStatus  AttendanceStatus @default(REGISTERED)
+  notes             String?
+  
+  @@unique([eventId, userId])
+  @@map("event_registrations")
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum AttendanceStatus {
+  REGISTERED
+  ATTENDED
+  CANCELED
+  NO_SHOW
+}
+
+// Publications section
+model Publication {
+  id                String          @id @default(cuid())
+  title             String
+  type              PublicationType
+  description       String?         @db.Text
+  publicationDate   DateTime
+  coverImage        String?
+  fileUrl           String
+  isPublic          Boolean         @default(true)
+  pageCount         Int?
+  author            String?
+  editor            String?
+  volume            String?
+  issue             String?
+  viewCount         Int             @default(0)
+  downloadCount     Int             @default(0)
+  createdBy         String
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  
+  @@map("publications")
+}
+
+enum PublicationType {
+  NEWSLETTER
+  MAGAZINE
+  PLACEMENT_BROCHURE
+  ANNUAL_REPORT
+  OTHER
+}
+
+// Membership information
+model MembershipTier {
+  id                String          @id @default(cuid())
+  name              String          @unique
+  description       String          @db.Text
+  fee               Float
+  durationMonths    Int             @default(12)
+  benefits          String          @db.Text
+  isActive          Boolean         @default(true)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  // Relations
+  memberships       Membership[]
+  
+  @@map("membership_tiers")
+}
+
+model Membership {
+  id                String          @id @default(cuid())
+  userId            String
+  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tierId            String
+  tier              MembershipTier  @relation(fields: [tierId], references: [id])
+  startDate         DateTime
+  endDate           DateTime
+  membershipNumber  String          @unique
+  paymentStatus     PaymentStatus
+  paymentId         String?
+  amountPaid        Float
+  isActive          Boolean         @default(true)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  renewals          MembershipRenewal[]
+  
+  @@map("memberships")
+}
+
+model MembershipRenewal {
+  id                String          @id @default(cuid())
+  membershipId      String
+  membership        Membership      @relation(fields: [membershipId], references: [id], onDelete: Cascade)
+  previousEndDate   DateTime
+  newEndDate        DateTime
+  paymentStatus     PaymentStatus
+  paymentId         String?
+  amountPaid        Float
+  renewalDate       DateTime        @default(now())
+  
+  @@map("membership_renewals")
+}
+
+// Photo Gallery
+model PhotoAlbum {
+  id                String          @id @default(cuid())
+  title             String
+  description       String?         @db.Text
+  albumDate         DateTime
+  coverImage        String?
+  isPublic          Boolean         @default(true)
+  createdBy         String
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  
+  // Relations
+  photos            Photo[]
+  events            Event[]
+  
+  @@map("photo_albums")
+}
+
+model Photo {
+  id                String          @id @default(cuid())
+  albumId           String
+  album             PhotoAlbum      @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  imageUrl          String
+  caption           String?
+  uploadDate        DateTime        @default(now())
+  uploadedBy        String
+  isPublic          Boolean         @default(true)
+  
+  @@map("photos")
+}
+
+model Video {
+  id                String          @id @default(cuid())
+  title             String
+  description       String?         @db.Text
+  videoUrl          String          // YouTube/Vimeo embed URL
+  thumbnailUrl      String?
+  uploadDate        DateTime        @default(now())
+  duration          Int?            // in seconds
+  isPublic          Boolean         @default(true)
+  createdBy         String
+  
+  @@map("videos")
+}
+
+// Donations
+model DonationCategory {
+  id                String          @id @default(cuid())
+  name              String          @unique
+  description       String          @db.Text
+  isActive          Boolean         @default(true)
+  minAmount         Float?
+  recommendedAmount Float?
+  coverImage        String?
+  
+  // Relations
+  donations         Donation[]
+  
+  @@map("donation_categories")
+}
+
+model Donation {
+  id                String          @id @default(cuid())
+  userId            String?
+  user              User?           @relation(fields: [userId], references: [id])
+  categoryId        String
+  category          DonationCategory @relation(fields: [categoryId], references: [id])
+  amount            Float
+  currency          String          @default("INR")
+  donorName         String          // For guest donations
+  donorEmail        String          // For guest donations
+  donorPhone        String?
+  donorMessage      String?         @db.Text
+  paymentStatus     PaymentStatus
+  paymentId         String?
+  transactionId     String?
+  paymentMethod     String?
+  isAnonymous       Boolean         @default(false)
+  receiptGenerated  Boolean         @default(false)
+  receiptNumber     String?         @unique
+  receiptUrl        String?
+  donationDate      DateTime        @default(now())
+  
+  @@map("donations")
+}
+
+// Career Opportunities
+model Job {
+  id                String          @id @default(cuid())
+  title             String
+  company           String
+  location          String
+  description       String          @db.Text
+  requirements      String          @db.Text
+  salary            String?
+  employmentType    EmploymentType
+  experienceLevel   ExperienceLevel
+  postedBy          String
+  poster            User            @relation("JobPoster", fields: [postedBy], references: [id])
+  isActive          Boolean         @default(true)
+  isApproved        Boolean         @default(false)
+  approvedBy        String?
+  approvalDate      DateTime?
+  applicationDeadline DateTime
+  contactEmail      String
+  contactPhone      String?
+  postedDate        DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  
+  // Relations
+  applications      JobApplication[]
+  
+  @@map("jobs")
+}
+
+enum EmploymentType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  INTERNSHIP
+  FREELANCE
+}
+
+enum ExperienceLevel {
+  ENTRY
+  JUNIOR
+  MID
+  SENIOR
+  EXECUTIVE
+}
+
+model JobApplication {
+  id                String          @id @default(cuid())
+  jobId             String
+  job               Job             @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  userId            String
+  applicant         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resumeUrl         String
+  coverLetter       String?         @db.Text
+  applicationDate   DateTime        @default(now())
+  status            ApplicationStatus @default(SUBMITTED)
+  statusUpdateDate  DateTime?
+  notes             String?         @db.Text
+  
+  @@unique([jobId, userId])
+  @@map("job_applications")
+}
+
+enum ApplicationStatus {
+  SUBMITTED
+  UNDER_REVIEW
+  SHORTLISTED
+  INTERVIEW
+  SELECTED
+  REJECTED
+  WITHDRAWN
+}
+
+// Notable Alumni section
+model NotableCategory {
+  id                String          @id @default(cuid())
+  name              String          @unique // Leadership, Academia, Government, Entrepreneurship, etc.
+  description       String?         @db.Text
+  iconUrl           String?
+  
+  // Relations
+  notableAlumni     AlumniProfile[]
+  
+  @@map("notable_categories")
+}
+
+model SuccessStory {
+  id                String          @id @default(cuid())
+  alumniId          String          @unique
+  alumniProfile     AlumniProfile   @relation(fields: [alumniId], references: [id], onDelete: Cascade)
+  title             String
+  story             String          @db.Text
+  achievements      String          @db.Text
+  coverImage        String?
+  videoUrl          String?
+  featuredOrder     Int?            // For ordering featured stories
+  isFeatured        Boolean         @default(false)
+  publishDate       DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  
+  @@map("success_stories")
+}
+
+// Content management
+model ContentBlock {
+  id                String          @id @default(cuid())
+  title             String
+  slug              String          @unique
+  content           String          @db.Text
+  type              ContentType
+  section           String // about, homepage, membership, etc.
+  isActive          Boolean         @default(true)
+  createdBy         String
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  
+  @@map("content_blocks")
+}
+
+enum ContentType {
+  TEXT
+  HTML
+  BANNER
+  MISSION
+  VISION
+  MESSAGE
+  FAQ
+}
+
+// System settings and configurations
+model SiteConfiguration {
+  id                String          @id @default(cuid())
+  siteName          String          @default("University Alumni Association")
+  logoUrl           String?
+  faviconUrl        String?
+  primaryColor      String          @default("#000080")
+  secondaryColor    String          @default("#FFD700")
+  contactEmail      String
+  contactPhone      String?
+  address           String?         @db.Text
+  socialLinks       Json            @default("{\"facebook\":\"\",\"twitter\":\"\",\"linkedin\":\"\",\"instagram\":\"\",\"youtube\":\"\"}")
+  metaDescription   String?
+  metaKeywords      String?
+  googleAnalyticsId String?
+  updatedAt         DateTime        @updatedAt
+  
+  @@map("site_configuration")
+}
