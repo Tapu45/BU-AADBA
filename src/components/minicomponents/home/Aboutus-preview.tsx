@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React from "react";
 import { motion } from "framer-motion";
@@ -40,7 +40,10 @@ const AboutusPreview: React.FC = () => (
         Welcome to Our Alumni Family
       </h2>
       <p className="text-lg md:text-xl text-gray-700 mb-10">
-        Our Alumni Association is more than a network—it's a vibrant community where lifelong friendships are forged, careers are nurtured, and every achievement is celebrated. Together, we empower each other to reach new heights.
+        Our Alumni Association is more than a network—it&apos;s a vibrant
+        community where lifelong friendships are forged, careers are nurtured,
+        and every achievement is celebrated. Together, we empower each other to
+        reach new heights.
       </p>
       <div className="flex flex-col md:flex-row justify-center gap-8 mb-8">
         {features.map((feature, idx) => (
@@ -49,7 +52,9 @@ const AboutusPreview: React.FC = () => (
             className="flex-1 bg-[#a50303] rounded-xl shadow-lg px-6 py-8 flex flex-col items-center transition hover:scale-105"
           >
             {feature.icon}
-            <span className="text-white font-semibold text-lg mb-2">{feature.title}</span>
+            <span className="text-white font-semibold text-lg mb-2">
+              {feature.title}
+            </span>
             <p className="text-white text-sm">{feature.desc}</p>
           </div>
         ))}

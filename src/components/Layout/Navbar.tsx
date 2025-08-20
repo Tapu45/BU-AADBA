@@ -1,4 +1,6 @@
 import React from "react";
+import Link from "next/link";
+import Image from "next/image";
 
 const Navbar: React.FC = () => (
   <nav
@@ -6,9 +8,9 @@ const Navbar: React.FC = () => (
     style={{ backgroundColor: "#a50303" }}
   >
     <div className="flex items-center space-x-4">
-      <a href="/">
-        <img src="/logo.png" alt="Alumni Logo" className="h-10 w-auto" />
-      </a>
+      <Link href="/" passHref>
+        <Image src="/logo.png" alt="Alumni Logo" className="h-10 w-auto" width={40} height={40} />
+      </Link>
       <div className="flex flex-col">
         <span className="text-white text-base font-semibold leading-tight">ବ୍ରହ୍ମପୁର ବିଶ୍ୱବିଦ୍ୟାଳୟ</span>
         <span className="text-white text-lg font-bold leading-tight">BERHAMPUR UNIVERSITY</span>
@@ -17,16 +19,16 @@ const Navbar: React.FC = () => (
     </div>
     <ul className="flex space-x-6">
       <li>
-        <a href="/" className="text-white hover:text-yellow-300 transition">Home</a>
+        <Link href="/" className="text-white hover:text-yellow-300 transition">Home</Link>
       </li>
       <li>
-        <a href="/stories" className="text-white hover:text-yellow-300 transition">Stories</a>
+        <Link href="/stories" className="text-white hover:text-yellow-300 transition">Stories</Link>
       </li>
       <li>
-        <a href="/events" className="text-white hover:text-yellow-300 transition">Events</a>
+        <Link href="/events" className="text-white hover:text-yellow-300 transition">Events</Link>
       </li>
       <li>
-        <a href="/contact" className="text-white hover:text-yellow-300 transition">Contact</a>
+        <Link href="/contact" className="text-white hover:text-yellow-300 transition">Contact</Link>
       </li>
     </ul>
   </nav>
