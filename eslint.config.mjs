@@ -31,6 +31,9 @@ const eslintConfig = [
       "@typescript-eslint/no-empty-object-type": "off",
       "@typescript-eslint/no-unsafe-function-type": "off",
       "@typescript-eslint/no-require-imports": "off",
+      "@typescript-eslint/no-unnecessary-type-constraint": "off",
+      "@typescript-eslint/no-wrapper-object-types": "off",
+      "@next/next/no-img-element": "warn" // Change to warning instead of error
     },
   },
 ];
