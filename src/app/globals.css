@@ -3,6 +3,13 @@
 
 @custom-variant dark (&:is(.dark *));
 
+.inter-custom {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400; /* Change to desired weight */
+  font-style: normal;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

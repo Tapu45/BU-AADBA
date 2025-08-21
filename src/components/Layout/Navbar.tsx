@@ -17,20 +17,48 @@ const Navbar: React.FC = () => (
         <span className="text-yellow-200 text-xs leading-tight">Accredited by NAAC</span>
       </div>
     </div>
+  
     <ul className="flex space-x-6">
       <li>
         <Link href="/" className="text-white hover:text-yellow-300 transition">Home</Link>
       </li>
       <li>
-        <Link href="/stories" className="text-white hover:text-yellow-300 transition">Stories</Link>
+        <Link href="/about" className="text-white hover:text-yellow-300 transition">About Us</Link>
+      </li>
+      <li>
+        <Link href="/executive-committee" className="text-white hover:text-yellow-300 transition">Executive Committee</Link>
+      </li>
+      <li>
+        <Link href="/members" className="text-white hover:text-yellow-300 transition">Members</Link>
       </li>
       <li>
         <Link href="/events" className="text-white hover:text-yellow-300 transition">Events</Link>
       </li>
       <li>
-        <Link href="/contact" className="text-white hover:text-yellow-300 transition">Contact</Link>
+        <Link href="/gallery" className="text-white hover:text-yellow-300 transition">Gallery</Link>
+      </li>
+      <li>
+        <Link href="/newsletter" className="text-white hover:text-yellow-300 transition">Newsletter</Link>
+      </li>
+      <li>
+        <Link href="/notable-alumni" className="text-white hover:text-yellow-300 transition">Notable Alumni</Link>
+      </li>
+      <li className="relative group">
+        <span className="text-white hover:text-yellow-300 transition cursor-pointer">Engage</span>
+        <ul className="absolute left-0 mt-2 bg-[#a50303] rounded shadow-lg hidden group-hover:block min-w-max z-10">
+          <li>
+            <Link href="/engage/achievements" className="block px-4 py-2 text-white hover:text-yellow-300">Share Achievements</Link>
+          </li>
+          <li>
+            <Link href="/engage/opportunities" className="block px-4 py-2 text-white hover:text-yellow-300">Share Opportunities</Link>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <Link href="/contact" className="text-white hover:text-yellow-300 transition">Contact Us</Link>
       </li>
     </ul>
+
   </nav>
 );
 

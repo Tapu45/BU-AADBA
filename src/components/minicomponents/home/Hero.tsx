@@ -12,10 +12,7 @@ const Hero: React.FC = () => (
       backgroundPosition: "center",
     }}
   >
-    {/* Navbar at top */}
-    <div className="relative z-20">
-      <Navbar />
-    </div>
+
     {/* Soft Overlay */}
    <div className="absolute inset-0 bg-black/40" />
     {/* Content moved to bottom right */}
