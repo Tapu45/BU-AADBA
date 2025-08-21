@@ -10,6 +10,7 @@ import LatestPublications from '@/components/minicomponents/home/Latest-Publicat
 import Highlights from '@/components/minicomponents/home/Highlights';
 import PastEvents from '@/components/minicomponents/home/PastEvents';
 import Footer from '@/components/minicomponents/home/Footer';
+import NotableAlumini from '@/components/minicomponents/home/Notable-Alumini';
 
 export default function HomePage() {
   return (
@@ -22,8 +23,9 @@ export default function HomePage() {
       <UpcomingEvent />
       <LatestPublications/> */}
       <Highlights/>
+      <NotableAlumini/>
       <PastEvents/>
-      <Footer/>
+      {/* <Footer/> */}
     </main>
   );
 }

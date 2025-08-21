@@ -14,7 +14,9 @@ const Navbar: React.FC = () => (
       <div className="flex flex-col">
         <span className="text-white text-base font-semibold leading-tight">ବ୍ରହ୍ମପୁର ବିଶ୍ୱବିଦ୍ୟାଳୟ</span>
         <span className="text-white text-lg font-bold leading-tight">BERHAMPUR UNIVERSITY</span>
-        <span className="text-yellow-200 text-xs leading-tight">Accredited by NAAC</span>
+       <span className="text-yellow-200 text-xs leading-tight">
+          Accredited by NAAC <span className="font-bold text-yellow-300">A Grade</span>
+        </span>
       </div>
     </div>
   
@@ -25,9 +27,9 @@ const Navbar: React.FC = () => (
       <li>
         <Link href="/about" className="text-white hover:text-yellow-300 transition">About Us</Link>
       </li>
-      <li>
+      {/* <li>
         <Link href="/executive-committee" className="text-white hover:text-yellow-300 transition">Executive Committee</Link>
-      </li>
+      </li> */}
       <li>
         <Link href="/members" className="text-white hover:text-yellow-300 transition">Members</Link>
       </li>
@@ -40,9 +42,9 @@ const Navbar: React.FC = () => (
       <li>
         <Link href="/newsletter" className="text-white hover:text-yellow-300 transition">Newsletter</Link>
       </li>
-      <li>
+      {/* <li>
         <Link href="/notable-alumni" className="text-white hover:text-yellow-300 transition">Notable Alumni</Link>
-      </li>
+      </li> */}
       <li className="relative group">
         <span className="text-white hover:text-yellow-300 transition cursor-pointer">Engage</span>
         <ul className="absolute left-0 mt-2 bg-[#a50303] rounded shadow-lg hidden group-hover:block min-w-max z-10">
