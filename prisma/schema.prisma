@@ -48,6 +48,12 @@ enum UserRole {
   EXECUTIVE
 }
 
+enum AlumniStatus {
+  APPROVAL_PENDING
+  APPROVED
+  REJECTED
+}
+
 // Alumni specific information
 model AlumniProfile {
   id                String          @id @default(cuid())
@@ -68,8 +74,8 @@ model AlumniProfile {
   city              String?
   state             String?
   country           String?
-  bio               String?         @db.Text
-  achievements      String?         @db.Text
+  suggestions       String?         @db.Text // renamed from bio
+  contributionNotes String?         @db.Text // renamed from achievements
   linkedInUrl       String?
   twitterUrl        String?
   facebookUrl       String?
@@ -78,6 +84,7 @@ model AlumniProfile {
   phoneNumber       String?
   alternateEmail    String?
   profileImage      String?
+  status            AlumniStatus @default(APPROVAL_PENDING)
   coverImage        String?
   isNotable         Boolean         @default(false)
   isHallOfFame      Boolean         @default(false)
@@ -87,6 +94,9 @@ model AlumniProfile {
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
   isActive          Boolean         @default(true)
+  yearOfJoining             Int?           // newly added
+  registrationTransactionId String?        // newly added
+  registrationPaymentDate   DateTime?      // newly added
   
   // Relations
   successStory      SuccessStory?

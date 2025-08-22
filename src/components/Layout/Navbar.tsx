@@ -3,8 +3,8 @@ import Link from "next/link";
 import Image from "next/image";
 
 const Navbar: React.FC = () => (
-  <nav
-    className="w-full px-6 py-4 flex items-center justify-between"
+   <nav
+    className="w-full px-6 py-4 flex items-center justify-between sticky top-0 z-50"
     style={{ backgroundColor: "#a50303" }}
   >
     <div className="flex items-center space-x-4">
