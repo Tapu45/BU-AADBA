@@ -21,7 +21,7 @@ const links = [
   { name: "Membership", href: "/admin/membership", icon: <Ticket size={22} /> },
   {
     name: "Newsletters",
-    href: "/admin/newsletters",
+    href: "/admin/newsletter",
     icon: <Newspaper size={22} />,
   },
   { name: "Events", href: "/admin/events", icon: <Calendar size={22} /> },

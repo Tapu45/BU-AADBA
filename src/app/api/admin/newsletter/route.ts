@@ -17,26 +17,30 @@ export async function POST(request: Request) {
     pageCount,
   } = body;
 
-  if (!title || !fileUrl || !publicationDate || !createdBy) {
+  if (!title || !fileUrl || !publicationDate) {
     return new Response(JSON.stringify({ error: 'Missing required fields.' }), { status: 400 });
   }
 
+  const data: any = {
+    title,
+    type: 'NEWSLETTER',
+    description,
+    publicationDate: new Date(publicationDate),
+    coverImage,
+    fileUrl,
+    author,
+    editor,
+     volume: volume !== undefined ? String(volume) : undefined, // <-- convert to string
+    issue: issue !== undefined ? String(issue) : undefined,   // <-- convert to string
+    isPublic,
+    pageCount,
+  };
+  if (createdBy) {
+    data.createdBy = createdBy;
+  }
+
   const newsletter = await prisma.publication.create({
-    data: {
-      title,
-      type: 'NEWSLETTER',
-      description,
-      publicationDate: new Date(publicationDate),
-      coverImage,
-      fileUrl,
-      author,
-      editor,
-      volume,
-      issue,
-      createdBy,
-      isPublic,
-      pageCount,
-    },
+    data,
   });
 
   return new Response(JSON.stringify({ newsletter }), { status: 201 });
@@ -95,4 +99,28 @@ export async function DELETE(request: Request) {
   });
 
   return new Response(JSON.stringify({ success: true }), { status: 200 });
+}
+
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get('id');
+
+  if (id) {
+    // Get a single newsletter by ID
+    const newsletter = await prisma.publication.findUnique({
+      where: { id },
+    });
+    if (!newsletter) {
+      return new Response(JSON.stringify({ error: 'Newsletter not found.' }), { status: 404 });
+    }
+    return new Response(JSON.stringify({ newsletter }), { status: 200 });
+  }
+
+  // Get all newsletters
+  const newsletters = await prisma.publication.findMany({
+    where: { type: 'NEWSLETTER' },
+    orderBy: { publicationDate: 'desc' },
+  });
+
+  return new Response(JSON.stringify({ newsletters }), { status: 200 });
 }
