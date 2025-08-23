@@ -1,36 +1,80 @@
-"use client"
+"use client";
 
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { UserCircle2 } from "lucide-react"; // Import profile icon
 
 const messages = [
   {
-    name: "Dr. Priya Sharma",
-    title: "Alumni Association President",
-    message:
-      "Welcome to our alumni family! Together, we build bridges between generations and foster lifelong connections.",
-    image: "https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=facearea&w=256&h=256&facepad=2",
+    name: "Dr. Nihar Ranjan Mishra",
+    title:
+      "President, Alumni Association, Department of Business Administration (Batch: 1988-90)",
+    intro:
+      "Message from the President, Alumni Association, Department of Business Administration (AADBA)",
+    message: `Dear Alumni,
+It is with immense pride and joy that I connect with you through this platform. Each one of you is an integral part of the journey and success of our Department of Business Administration. Our alumni are not just former students—they are ambassadors of our values, our culture, and our commitment to excellence.
+
+The Alumni Association is more than a network; it is a family that celebrates our shared memories, fosters lifelong bonds, and opens doors to new opportunities. Together, we can inspire current students, guide future leaders, and create a strong ecosystem of support and collaboration.
+
+I encourage you to remain engaged, reconnect with old friends, and contribute your time, knowledge, and experiences. Every interaction, no matter how small, strengthens the chain that binds us together and creates ripples of inspiration for the next generation.
+
+Let us dream bigger, achieve more, and carry forward the legacy of our department with pride. With your enthusiasm and commitment, I am confident that our Alumni Association will continue to grow as a vibrant and impactful community.
+
+Stay connected. Stay inspired. Stay proud.
+
+With warm regards,
+
+Dr. Nihar Ranjan Mishra
+President
+Alumni Association
+Department of Business Administration
+Batch: 1988-90`,
+    image: "/assets/leaders/image.png",
+    isIcon: false,
   },
   {
-    name: "Mr. Rajesh Kumar",
-    title: "Alumni Association Secretary",
-    message:
-      "Our mission is to support your growth and celebrate your achievements. Stay engaged and inspire others.",
-    image: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=facearea&w=256&h=256&facepad=2",
+    name: "Secretary",
+    title: "Alumni Association, Department of Business Administration",
+    intro:
+      "Message from the Secretary, Alumni Association, Department of Business Administration",
+    message: `It gives me immense pleasure to extend my warm greetings to all members of the Alumni Association of the Department of Business Administration. Our alumni community is a true reflection of the strength and legacy of this department, carrying forward the values of knowledge, leadership, and integrity into diverse fields across the globe.
+
+The Alumni Association serves as a bridge between past and present, uniting graduates across generations and creating opportunities for meaningful collaboration. Together, we aspire to build a vibrant network that not only celebrates our shared heritage but also contributes to the academic, professional, and social development of our alma mater and its students.
+
+I sincerely believe that active alumni engagement can inspire current students, strengthen industry–academia linkages, and enhance the visibility of our department in today’s competitive world. Let us work collectively to nurture this spirit of belongingness and take our association to greater heights.
+
+I invite each one of you to stay connected, share your achievements, and participate in the activities of the Alumni Association. Your contributions—whether through mentorship, knowledge sharing, or institutional support—will undoubtedly make a lasting impact.
+
+With warm regards,
+
+Secretary
+Alumni Association
+Department of Business Administration`,
+    image: "", // No image
+    isIcon: true, // Use icon
   },
   {
-    name: "Prof. Anjali Verma",
-    title: "University Vice-Chancellor",
-    message:
-      "Alumni are the pride of our university. Your success stories motivate our students and faculty every day.",
-    image: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=facearea&w=256&h=256&facepad=2",
-  },
-  {
-    name: "Dr. Amitabh Singh",
-    title: "Dean of Students",
-    message:
-      "We encourage you to participate in events and contribute to the university’s growth and excellence.",
-    image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=facearea&w=256&h=256&facepad=2",
+    name: "Dr Sunil Kumar Pradhan",
+    title:
+      "Coordinator of the Department, Department of Business Administration",
+    intro:
+      "Message from the Coordinator of the Department, Department of Business Administration",
+    message: `Dear Alumni,
+It gives me great pleasure to reach out to you through our Alumni Association platform. Over the years, the Department of Business Administration has grown into a vibrant hub of learning, innovation, and leadership—thanks not only to the dedication of our faculty and students but also to the continued support and achievements of our alumni.
+
+You are the true strength and pride of this department. Your accomplishments in diverse fields, your entrepreneurial spirit, and your commitment to excellence continue to inspire our current students and motivate us to strive for higher standards of teaching and research.
+
+The Alumni Association provides a wonderful opportunity to reconnect, to share experiences, and to give back to the community that shaped you. I warmly invite each of you to engage actively—through mentorship, industry collaborations, guest lectures, and by simply being present for your alma mater. Your contributions will help us build stronger bridges between academia and industry and create pathways for our students to excel in their professional journeys.
+
+As we look ahead, I envision a strong and dynamic alumni network that not only celebrates our shared past but also shapes the future of the department. Together, we can create a legacy of knowledge, innovation, and leadership that will stand the test of time.
+
+With warm regards,
+
+Dr Sunil Kumar Pradhan
+Coordinator of the Department
+Department of Business Administration`,
+    image: "/assets/leaders/image copy.png",
+    isIcon: false,
   },
 ];
 
@@ -42,35 +86,29 @@ const slideVariants = {
 
 const AUTO_SLIDE_INTERVAL = 4000;
 
-const quote = `“Alumni are the living ambassadors of our legacy. Every story, every achievement, every connection strengthens our community.”`;
-
 const Messages: React.FC = () => {
   const [index, setIndex] = React.useState(0);
+  const [paused, setPaused] = React.useState(false);
 
   React.useEffect(() => {
+    if (paused) return;
     const timer = setTimeout(() => {
       setIndex((prev) => (prev + 1) % messages.length);
     }, AUTO_SLIDE_INTERVAL);
     return () => clearTimeout(timer);
-  }, [index]);
+  }, [index, paused]);
 
   return (
     <section className="w-full py-14 px-4 bg-white flex flex-col items-center">
       <h2 className="text-3xl md:text-4xl font-bold text-[#a50303] mb-10 text-center drop-shadow">
         Messages from Our Leadership
       </h2>
-      <div className="flex flex-col md:flex-row items-center justify-center w-full max-w-5xl mx-auto">
-        {/* Quote Section */}
-        <div className="md:w-1/2 w-full flex flex-col justify-center items-start px-4 mb-10 md:mb-0">
-          <blockquote className="text-2xl md:text-3xl font-semibold text-[#a50303] mb-6 leading-relaxed">
-            {quote}
-          </blockquote>
-          <div className="text-gray-500 text-lg">
-            <span>— Alumni Association</span>
-          </div>
-        </div>
-        {/* Carousel Section */}
-        <div className="md:w-1/2 w-full relative h-[400px] flex items-center justify-center">
+      <div className="flex flex-col items-center justify-center w-full max-w-5xl mx-auto">
+        <div
+          className="w-full relative min-h-[400px] flex flex-col md:flex-row gap-8 items-stretch justify-center"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+        >
           <AnimatePresence mode="wait">
             <motion.div
               key={messages[index].name}
@@ -78,18 +116,45 @@ const Messages: React.FC = () => {
               initial="initial"
               animate="animate"
               exit="exit"
-              className="absolute w-full h-full flex flex-col items-center justify-center"
+              className="flex flex-col md:w-1/3 w-full items-center md:items-start"
             >
-              <img
-                src={messages[index].image}
-                alt={messages[index].name}
-                className="w-32 h-32 rounded-full object-cover mb-6 border-4 border-[#a50303]/40 shadow-lg"
-              />
-              <div className="bg-white/90 rounded-xl px-6 py-4 shadow text-center max-w-md">
-                <h3 className="text-xl font-bold text-[#a50303] mb-1">{messages[index].name}</h3>
-                <p className="text-[#a50303] font-medium mb-2">{messages[index].title}</p>
-                <p className="text-gray-700">{messages[index].message}</p>
-              </div>
+              {messages[index].isIcon ? (
+                <UserCircle2
+                  size={128}
+                  className="mb-4 text-[#a50303]/70"
+                  strokeWidth={1.5}
+                />
+              ) : (
+                <img
+                  src={messages[index].image}
+                  alt={messages[index].name}
+                  className="w-32 h-32 rounded-full object-cover mb-4 border-4 border-[#a50303]/40 shadow-lg"
+                />
+              )}
+              <h3 className="text-xl font-bold text-[#a50303] mb-1 text-center md:text-left">
+                {messages[index].name}
+              </h3>
+              <p className="text-[#a50303] font-medium mb-2 text-center md:text-left">
+                {messages[index].title}
+              </p>
+              <p className="text-gray-700 mb-4 text-center md:text-left">
+                {messages[index].intro}
+              </p>
+            </motion.div>
+          </AnimatePresence>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={messages[index].message}
+              variants={slideVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              className="bg-white/90 rounded-xl px-8 py-6 shadow text-left md:w-2/3 w-full overflow-y-auto"
+              style={{ maxHeight: "340px" }}
+            >
+              <p className="text-gray-700 whitespace-pre-line">
+                {messages[index].message}
+              </p>
             </motion.div>
           </AnimatePresence>
           {/* Dots navigation */}
@@ -97,7 +162,9 @@ const Messages: React.FC = () => {
             {messages.map((_, i) => (
               <button
                 key={i}
-                className={`w-3 h-3 rounded-full border border-[#a50303] ${i === index ? "bg-[#a50303]" : "bg-white"}`}
+                className={`w-3 h-3 rounded-full border border-[#a50303] ${
+                  i === index ? "bg-[#a50303]" : "bg-white"
+                }`}
                 onClick={() => setIndex(i)}
                 aria-label={`Go to slide ${i + 1}`}
               />
