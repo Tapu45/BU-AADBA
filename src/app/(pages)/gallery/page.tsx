@@ -87,80 +87,89 @@ export default function GalleryPage() {
   }, [modalIdx]);
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-[#f8f8fa] to-[#f3e9ee] px-4 py-22">
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-        className="max-w-7xl mx-auto"
-      >
-        <header className="mb-12 flex flex-col gap-2 items-center">
-          <h1 className="text-3xl md:text-3xl font-extrabold text-[#a50303] tracking-tight drop-shadow-sm">
-            Alumni Photo Gallery
+    <main className="min-h-screen bg-[#f8f8f8] px-6 py-24">
+      <div className="max-w-7xl mx-auto">
+        <motion.header
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="mb-12 text-center"
+        >
+          <h1 className="text-4xl md:text-5xl font-bold text-[#a50303] tracking-tight">
+            <span className="relative inline-block">
+              Alumni Gallery
+              <span className="absolute bottom-1 left-0 w-full h-[3px] bg-[#a50303] opacity-20"></span>
+            </span>
           </h1>
-          <p className="text-lg text-muted-foreground font-medium text-center max-w-2xl">
-            Explore memorable moments from alumni events, reunions, and celebrations.
+          <p className="text-lg text-zinc-600 mt-4 max-w-2xl mx-auto">
+            Explore memorable moments from our alumni community
           </p>
-        </header>
+        </motion.header>
 
         {loading ? (
           <div className="flex justify-center items-center py-32">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="text-[#a50303] text-xl font-semibold"
-            >
-              Loading gallery...
-            </motion.div>
+            <div className="relative h-12 w-12">
+              <div className="absolute inset-0 border-4 border-[#a50303]/20 rounded-full"></div>
+              <motion.div 
+                className="absolute inset-0 border-4 border-transparent border-t-[#a50303] rounded-full"
+                animate={{ rotate: 360 }}
+                transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+              ></motion.div>
+            </div>
           </div>
         ) : photos.length === 0 ? (
-          <div className="py-32 text-center text-muted-foreground text-lg">
+          <div className="py-32 text-center text-zinc-500 text-lg">
             No photos found.
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6 }}
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5"
+          >
             {photos.map((photo, idx) => (
-              <motion.button
+              <motion.div
                 key={photo.id}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                whileHover={{
-                  scale: 1.04,
-                  boxShadow: "0 4px 24px #a5030333",
-                }}
-                className="relative group focus:outline-none bg-white rounded-2xl shadow-lg border border-[#eaeaea] overflow-hidden transition-all"
-                aria-label={`View photo: ${photo.caption || photo.albumTitle || "Alumni Photo"}`}
-                onClick={() => openModal(idx)}
-                style={{ transition: "box-shadow 0.2s" }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: idx * 0.05 }}
+                className="aspect-[4/5] relative"
               >
-                <img
-                  src={photo.imageUrl}
-                  alt={photo.caption || photo.albumTitle || "Alumni Photo"}
-                  className="w-full h-48 object-cover rounded-2xl"
-                  loading="lazy"
-                />
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent px-3 py-2">
-                  {/* <div className="text-white text-sm font-medium truncate">
-                    {photo.caption || photo.albumTitle}
-                  </div> */}
-                  {/* <div className="text-xs text-white/80">
-                    {photo.uploadedBy && <>By {photo.uploadedBy} · </>}
-                    {new Date(photo.uploadDate).toLocaleDateString()}
-                  </div> */}
-                </div>
-              </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full h-full focus:outline-none group"
+                  onClick={() => openModal(idx)}
+                  aria-label={`View photo: ${photo.caption || "Alumni Photo"}`}
+                >
+                  <div className="absolute inset-0 bg-black/5 rounded-lg transform group-hover:bg-black/0 transition-all duration-300"></div>
+                  <img
+                    src={photo.imageUrl}
+                    alt={photo.caption || "Alumni Photo"}
+                    className="w-full h-full object-cover rounded-lg shadow-md"
+                    loading="lazy"
+                    style={{
+                      boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)",
+                    }}
+                  />
+                  <div className="absolute inset-0 rounded-lg ring-1 ring-black/5 transform group-hover:ring-[#a50303]/40 transition-all duration-300"></div>
+                  <div className="absolute bottom-0 left-0 right-0 h-1/4 bg-gradient-to-t from-black/30 to-transparent rounded-b-lg opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+                </motion.button>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         )}
 
         {/* Photo Modal */}
         <AnimatePresence>
           {modalIdx !== null && (
             <motion.div
-              className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
               aria-modal="true"
               role="dialog"
               tabIndex={-1}
@@ -174,57 +183,72 @@ export default function GalleryPage() {
                 initial={{ scale: 0.95, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.95, opacity: 0 }}
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                className="relative  rounded-3xl   p-6 max-w-2xl w-full flex flex-col items-center"
+                transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                className="relative p-6 max-w-7xl w-full max-h-[90vh] flex flex-col items-center"
                 onClick={(e) => e.stopPropagation()}
                 tabIndex={0}
                 aria-label="Photo viewer"
               >
                 <button
-                  className="absolute top-4 right-4 text-[#a50303] hover:bg-[#f8eaea] rounded-full p-2 focus:outline-none focus:ring-2 focus:ring-[#a50303]"
+                  className="absolute top-2 right-2 z-50 text-white bg-black/30 hover:bg-black/50 rounded-full p-2 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all duration-200"
                   onClick={closeModal}
                   aria-label="Close photo viewer"
                 >
-                  <X size={28} />
+                  <X size={24} />
                 </button>
-                <div className="flex items-center gap-4 w-full justify-center">
+                
+                <div className="flex items-center justify-between w-full h-full">
                   <button
-                    className="text-[#a50303] hover:bg-[#f8eaea] rounded-full p-2 focus:outline-none focus:ring-2 focus:ring-[#a50303] disabled:opacity-40"
+                    className="text-white hover:text-[#a50303] bg-black/30 hover:bg-white/90 rounded-full p-3 focus:outline-none focus:ring-2 focus:ring-white/50 disabled:opacity-30 transition-all duration-200 transform hover:scale-110"
                     onClick={prevPhoto}
                     aria-label="Previous photo"
                     disabled={modalIdx === 0}
                   >
-                    <ChevronLeft size={32} />
+                    <ChevronLeft size={28} />
                   </button>
-                  <img
-                    src={photos[modalIdx].imageUrl}
-                    alt={photos[modalIdx].caption || photos[modalIdx].albumTitle || "Alumni Photo"}
-                    className="max-h-[60vh] max-w-[70vw] rounded-2xl border border-[#eaeaea] shadow-lg object-contain"
-                    loading="eager"
-                  />
+                  
+                  <div className="mx-4 flex-1 flex justify-center">
+                    <img
+                      src={photos[modalIdx].imageUrl}
+                      alt={photos[modalIdx].caption || "Alumni Photo"}
+                      className="max-h-[80vh] max-w-full object-contain rounded-md shadow-2xl"
+                      loading="eager"
+                    />
+                  </div>
+                  
                   <button
-                    className="text-[#a50303] hover:bg-[#f8eaea] rounded-full p-2 focus:outline-none focus:ring-2 focus:ring-[#a50303] disabled:opacity-40"
+                    className="text-white hover:text-[#a50303] bg-black/30 hover:bg-white/90 rounded-full p-3 focus:outline-none focus:ring-2 focus:ring-white/50 disabled:opacity-30 transition-all duration-200 transform hover:scale-110"
                     onClick={nextPhoto}
                     aria-label="Next photo"
                     disabled={modalIdx === photos.length - 1}
                   >
-                    <ChevronRight size={32} />
+                    <ChevronRight size={28} />
                   </button>
                 </div>
-                <div className="mt-4 text-center w-full">
-                  {/* <div className="text-lg font-semibold text-[#a50303]">
-                    {photos[modalIdx].caption || photos[modalIdx].albumTitle}
+                
+                <div className="absolute bottom-6 left-0 right-0 flex justify-center">
+                  <div className="flex space-x-1.5 px-4 py-2 bg-black/30 backdrop-blur-md rounded-full">
+                    {photos.map((_, idx) => (
+                      <button
+                        key={idx}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setModalIdx(idx);
+                        }}
+                        className={`w-2 h-2 rounded-full ${
+                          modalIdx === idx ? "bg-white" : "bg-white/40 hover:bg-white/70"
+                        } transition-all duration-200`}
+                        aria-label={`Go to photo ${idx + 1}`}
+                        aria-current={modalIdx === idx}
+                      />
+                    ))}
                   </div>
-                  <div className="text-xs text-muted-foreground mt-1">
-                    {photos[modalIdx].uploadedBy && <>By {photos[modalIdx].uploadedBy} · </>}
-                    Uploaded on {new Date(photos[modalIdx].uploadDate).toLocaleDateString()}
-                  </div> */}
                 </div>
               </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
-      </motion.div>
+      </div>
     </main>
   );
 }

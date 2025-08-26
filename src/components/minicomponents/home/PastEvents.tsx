@@ -4,22 +4,44 @@ import React, { useEffect, useState } from "react";
 
 const events = [
   {
-    image: "/assets/events/India1.png", // Corrected case
-    caption:
-      "Alumni Meet 2024 – A memorable reunion of old friends and new connections.",
+    image: "/assets/alumini/alumini1.jpeg",
+    caption: "Alumni Meet – Cherished moments and reunions.",
   },
   {
-    image: "/assets/events/past2.jpg", // Corrected path
-    caption:
-      "Sports Day 2023 – Alumni and students competing together in friendly matches.",
+    image: "/assets/alumini/alumini2.jpeg",
+    caption: "Networking Session – Building connections for the future.",
   },
   {
-    image: "/assets/events/past3.jpg", // Corrected path
-    caption: "Career Fair 2022 – Alumni mentoring students for future success.",
+    image: "/assets/alumini/alumini3.jpeg",
+    caption: "Panel Discussion – Alumni sharing their experiences.",
   },
   {
-    image: "/assets/events/past4.jpg",
-    caption: "Cultural Fest 2021 – Celebrating heritage and achievements.",
+    image: "/assets/alumini/alumini4.jpeg",
+    caption: "Group Photo – Celebrating togetherness.",
+  },
+  {
+    image: "/assets/alumini/alumini5.jpg",
+    caption: "Sports Event – Alumni and students in action.",
+  },
+  {
+    image: "/assets/alumini/alumini6.jpeg",
+    caption: "Cultural Fest – Showcasing talent and heritage.",
+  },
+  {
+    image: "/assets/alumini/alumini7.jpeg",
+    caption: "Mentorship Program – Guiding the next generation.",
+  },
+  {
+    image: "/assets/alumini/alumini8.jpeg",
+    caption: "Award Ceremony – Honoring achievements.",
+  },
+  {
+    image: "/assets/alumini/alumini9.jpeg",
+    caption: "Interactive Workshop – Learning and growing together.",
+  },
+  {
+    image: "/assets/alumini/alumini10.jpeg",
+    caption: "Farewell Event – Memories to last a lifetime.",
   },
 ];
 

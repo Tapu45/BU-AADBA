@@ -26,16 +26,20 @@ export default function LoginPage() {
 
     if (!res.ok) {
       if (data.error === "Your registration is not approved yet.") {
-        setError("Your alumni profile is not accepted yet. Please wait for admin approval.");
+        setError(
+          "Your alumni profile is not accepted yet. Please wait for admin approval."
+        );
       } else {
         setError(data.error || "Login failed. Please try again.");
       }
       return;
     }
 
-    // Handle successful login (e.g., save token, redirect)
-    // localStorage.setItem("token", data.token);
-    // window.location.href = "/dashboard";
+    if (email === "admin.bu@email.com") {
+      window.location.href = "/admin/requests";
+    } else {
+      window.location.href = "/";
+    }
   };
 
   return (

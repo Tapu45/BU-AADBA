@@ -29,15 +29,14 @@ const Navbar: React.FC = () => {
           />
         </Link>
         <div className="flex flex-col">
-          <span className="text-white text-base font-semibold leading-tight">
-            ବ୍ରହ୍ମପୁର ବିଶ୍ୱବିଦ୍ୟାଳୟ
+          <span className="text-yellow-300 text-base font-bold leading-tight">
+            BUMBA Alumni Association
           </span>
-          <span className="text-white text-lg font-bold leading-tight">
-            BERHAMPUR UNIVERSITY
+          <span className="text-white text-sm font-semibold leading-tight">
+            Department of Business Administration
           </span>
           <span className="text-yellow-200 text-xs leading-tight">
-            Accredited by NAAC{" "}
-            <span className="font-bold text-yellow-300">A Grade</span>
+            BERHAMPUR UNIVERSITY
           </span>
         </div>
       </div>
@@ -97,7 +96,7 @@ const Navbar: React.FC = () => {
         {/* <li>
           <Link href="/notable-alumni" className="text-white hover:text-yellow-300 transition">Notable Alumni</Link>
         </li> */}
-      
+
         <li className="relative">
           <span
             className="text-white hover:text-yellow-300 transition cursor-pointer"

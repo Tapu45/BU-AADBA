@@ -64,7 +64,7 @@ const News: React.FC = () => {
               whileInView="visible"
               viewport={{ once: true }}
               variants={cardVariants}
-              className="bg-white rounded-xl shadow-lg flex flex-col border border-[#fbeaea] hover:shadow-xl transition w-[370px]"
+              className="bg-white rounded-xl shadow-lg flex flex-col border border-[#fbeaea] hover:shadow-xl transition w-[350px]"
               style={{ minHeight: CARD_HEIGHT }}
             >
               <img
