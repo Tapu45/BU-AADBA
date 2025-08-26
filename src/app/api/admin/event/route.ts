@@ -19,8 +19,6 @@ export async function POST(request: Request) {
     registrationEndDate,
     isFeatured = false,
     coverImage,
-    createdBy,
-    albumId,
     isPublished = false,
   } = body;
 
@@ -46,8 +44,6 @@ export async function POST(request: Request) {
       registrationEndDate: registrationEndDate ? new Date(registrationEndDate) : undefined,
       isFeatured,
       coverImage,
-      createdBy,
-      albumId,
       isPublished,
     },
   });
@@ -75,8 +71,6 @@ export async function PUT(request: Request) {
     registrationEndDate,
     isFeatured,
     coverImage,
-    createdBy,
-    albumId,
     isPublished,
   } = body;
 
@@ -103,8 +97,6 @@ export async function PUT(request: Request) {
       registrationEndDate: registrationEndDate ? new Date(registrationEndDate) : undefined,
       isFeatured,
       coverImage,
-      createdBy,
-      albumId,
       isPublished,
     },
   });
@@ -124,4 +116,27 @@ export async function DELETE(request: Request) {
   });
 
   return new Response(JSON.stringify({ success: true }), { status: 200 });
+}
+
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get('id');
+
+  if (id) {
+    // Get a single event by ID
+    const event = await prisma.event.findUnique({
+      where: { id },
+    });
+    if (!event) {
+      return new Response(JSON.stringify({ error: 'Event not found.' }), { status: 404 });
+    }
+    return new Response(JSON.stringify({ event }), { status: 200 });
+  }
+
+  // Get all events
+  const events = await prisma.event.findMany({
+    orderBy: { startDate: 'desc' },
+  });
+
+  return new Response(JSON.stringify({ events }), { status: 200 });
 }

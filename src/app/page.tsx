@@ -1,16 +1,18 @@
-"use client"
+"use client";
 
-import Hero from '../components/minicomponents/home/Hero';
-import AboutusPreview from '../components/minicomponents/home/Aboutus-preview';
-import Messages from '../components/minicomponents/home/messages';
-import News from '../components/minicomponents/home/News';
-import UpcomingEvent from '../components/minicomponents/home/Upcoming-event';
-import QuickLinks from '@/components/minicomponents/home/QuickLinks';
-import LatestPublications from '@/components/minicomponents/home/Latest-Publications';
-import Highlights from '@/components/minicomponents/home/Highlights';
-import PastEvents from '@/components/minicomponents/home/PastEvents';
-import Footer from '@/components/minicomponents/home/Footer';
-import NotableAlumini from '@/components/minicomponents/home/Notable-Alumini';
+import Hero from "../components/minicomponents/home/Hero";
+import AboutusPreview from "../components/minicomponents/home/Aboutus-preview";
+import Messages from "../components/minicomponents/home/messages";
+import News from "../components/minicomponents/home/News";
+import UpcomingEvent from "../components/minicomponents/home/Upcoming-event";
+import QuickLinks from "@/components/minicomponents/home/QuickLinks";
+import LatestPublications from "@/components/minicomponents/home/Latest-Publications";
+import Highlights from "@/components/minicomponents/home/Highlights";
+import PastEvents from "@/components/minicomponents/home/PastEvents";
+import Footer from "@/components/minicomponents/home/Footer";
+import NotableAlumini from "@/components/minicomponents/home/Notable-Alumini";
+import Gallery from "@/components/minicomponents/home/Gallery";
+
 
 export default function HomePage() {
   return (
@@ -18,13 +20,15 @@ export default function HomePage() {
       <Hero />
       <AboutusPreview />
       <Messages />
-      <QuickLinks/>
+      <QuickLinks />
       {/* <News />
       <UpcomingEvent />
       <LatestPublications/> */}
-      <Highlights/>
-      <NotableAlumini/>
-      <PastEvents/>
+      <PastEvents />
+      <News />
+      <Gallery />
+      <NotableAlumini />
+
       {/* <Footer/> */}
     </main>
   );

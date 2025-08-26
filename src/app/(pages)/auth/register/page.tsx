@@ -62,16 +62,22 @@ export default function AlumniRegisterPage() {
   const [currentImage, setCurrentImage] = useState(0);
 
   // Example membership plans
-  const [membershipPlans] = useState([
-    { id: "basic", name: "Basic", fee: 500 },
-    { id: "premium", name: "Premium", fee: 1000 },
-  ]);
+  const [membershipPlans, setMembershipPlans] = useState<
+    { id: string; name: string; fee: number }[]
+  >([]);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImage((prev) => (prev + 1) % carouselImages.length);
     }, 3000);
     return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    // Fetch membership plans from DB
+    fetch("/api/admin/membership")
+      .then((res) => res.json())
+      .then((data) => setMembershipPlans(data.tiers || []));
   }, []);
 
   // React Hook Form setup
@@ -151,7 +157,10 @@ export default function AlumniRegisterPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-gray-100  px-2">
-      <div className="w-full max-w-7xl bg-white rounded-2xl shadow-2xl flex flex-col md:flex-row overflow-hidden" style={{ height: "520px" }}>
+      <div
+        className="w-full max-w-7xl bg-white rounded-2xl shadow-2xl flex flex-col md:flex-row overflow-hidden"
+        style={{ height: "520px" }}
+      >
         {/* Carousel Section */}
         <div className="md:w-1/2 w-full bg-blue-100 p-0 flex items-stretch justify-stretch">
           <div className="relative w-full h-full flex items-stretch justify-stretch rounded-none overflow-hidden shadow-none sticky top-0">
@@ -181,7 +190,7 @@ export default function AlumniRegisterPage() {
           </div>
         </div>
         {/* Form Section */}
-       <div
+        <div
           className="md:w-1/2 w-full flex items-start justify-center p-8 bg-white overflow-y-auto h-full"
           style={{ maxHeight: "520px" }}
         >

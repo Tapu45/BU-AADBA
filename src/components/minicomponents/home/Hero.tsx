@@ -23,9 +23,9 @@ const Hero: React.FC = () => (
         </h1>
         <p className="text-lg md:text-2xl text-white mb-4 max-w-2xl drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
           BU alumni are changing the world or, at least, making it a little bit better, one graduate at a time.<br />
-          <span className="underline text-blue-200 cursor-pointer hover:text-blue-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-            Find stories
-          </span> that showcase after-the-Hilltop happenings here.
+            <span className="underline text-blue-200 cursor-pointer hover:text-blue-400 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+          
+          </span> Explore how life unfolds beyond the Hilltop.
         </p>
       </div>
     </div>

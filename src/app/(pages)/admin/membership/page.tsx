@@ -170,16 +170,17 @@ export default function MembershipTierAdminPage() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-3xl font-extrabold text-gray-900 flex items-center gap-2">
-          <CheckCircle size={28} className="text-[color:#a50303]" />
+    <div className="max-w-5xl mx-auto p-8">
+      <div className="flex items-center justify-between mb-8">
+        <h2 className="text-3xl font-extrabold text-gray-900 flex items-center gap-3">
+          <CheckCircle size={32} className="text-[color:#a50303]" aria-hidden="true" />
           Membership Tiers
         </h2>
         {!showForm && (
           <button
             onClick={() => setShowForm(true)}
-            className="flex items-center gap-2 bg-white border border-[#a50303] text-[#a50303] hover:bg-[#a50303] hover:text-white px-4 py-2 rounded shadow transition cursor-pointer"
+            className="flex items-center gap-2 bg-white border border-[#a50303] text-[#a50303] hover:bg-[#a50303] hover:text-white px-5 py-2.5 rounded-xl shadow-sm transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-[#a50303]/40"
+            aria-label="Create new membership tier"
           >
             <Plus size={20} />
             Create New
@@ -188,49 +189,55 @@ export default function MembershipTierAdminPage() {
       </div>
 
       {error && (
-        <div className="text-red-600 mb-2 flex items-center gap-2">
-          <XCircle size={18} />
-          {error}
+        <div className="text-red-600 mb-3 flex items-center gap-2 rounded-lg bg-red-50 px-4 py-2">
+          <XCircle size={18} aria-hidden="true" />
+          <span role="alert">{error}</span>
         </div>
       )}
       {success && (
-        <div className="text-green-600 mb-2 flex items-center gap-2">
-          <CheckCircle size={18} />
-          {success}
+        <div className="text-green-600 mb-3 flex items-center gap-2 rounded-lg bg-green-50 px-4 py-2">
+          <CheckCircle size={18} aria-hidden="true" />
+          <span role="status">{success}</span>
         </div>
       )}
 
       {showForm ? (
         <form
           onSubmit={editId ? handleUpdate : handleCreate}
-          className="bg-white rounded-lg shadow p-6 mb-8 border border-gray-200 space-y-4"
+          className="bg-white rounded-2xl shadow-lg p-8 mb-10 border border-gray-100 space-y-6"
+          aria-label={editId ? "Update membership tier" : "Create membership tier"}
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <input
               name="name"
               required
               placeholder="Name"
               value={form.name}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#a50303]/40 text-gray-900"
+              className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#a50303]/40 text-gray-900 transition-all"
+              aria-label="Tier name"
             />
             <input
               name="fee"
               required
               type="number"
+              min={0}
               placeholder="Fee"
               value={form.fee}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#a50303]/40 text-gray-900"
+              className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#a50303]/40 text-gray-900 transition-all"
+              aria-label="Tier fee"
             />
             <input
               name="durationMonths"
               required
               type="number"
+              min={1}
               placeholder="Duration (months)"
               value={form.durationMonths}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#a50303]/40 text-gray-900"
+              className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#a50303]/40 text-gray-900 transition-all"
+              aria-label="Tier duration in months"
             />
             <input
               name="benefits"
@@ -238,7 +245,8 @@ export default function MembershipTierAdminPage() {
               placeholder="Benefits"
               value={form.benefits}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#a50303]/40 text-gray-900"
+              className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#a50303]/40 text-gray-900 transition-all"
+              aria-label="Tier benefits"
             />
           </div>
           <textarea
@@ -247,31 +255,34 @@ export default function MembershipTierAdminPage() {
             placeholder="Description"
             value={form.description}
             onChange={(e) => handleChange(e as any)}
-            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#a50303]/40 text-gray-900"
-            rows={2}
+            className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#a50303]/40 text-gray-900 transition-all"
+            rows={3}
+            aria-label="Tier description"
           />
-          <label className="flex items-center gap-2">
+          <label className="flex items-center gap-2 cursor-pointer select-none">
             <input
               name="isActive"
               type="checkbox"
               checked={form.isActive}
               onChange={handleChange}
-              className="accent-[#a50303] h-4 w-4"
+              className="accent-[#a50303] h-5 w-5 rounded focus:ring-2 focus:ring-[#a50303]/40"
+              aria-checked={form.isActive}
+              aria-label="Tier is active"
             />
             <span className="text-gray-700 font-medium">Active</span>
           </label>
-          <div className="flex gap-2 mt-2">
+          <div className="flex gap-3 mt-2">
             <button
               type="submit"
               disabled={loading}
-              className="bg-[#a50303] hover:bg-[#880202] text-white px-4 py-2 rounded shadow transition cursor-pointer"
+              className="bg-[#a50303] hover:bg-[#880202] text-white px-5 py-2.5 rounded-xl shadow-sm transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-[#a50303]/40"
             >
               {editId ? "Update" : "Create"}
             </button>
             <button
               type="button"
               onClick={handleCancel}
-              className="px-4 py-2 rounded border border-gray-300 text-gray-700 bg-white hover:bg-gray-100 transition"
+              className="px-5 py-2.5 rounded-xl border border-gray-300 text-gray-700 bg-white hover:bg-gray-100 transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-gray-300"
             >
               Cancel
             </button>
@@ -280,33 +291,37 @@ export default function MembershipTierAdminPage() {
       ) : null}
 
       <div className="overflow-x-auto">
-        <table className="w-full border border-gray-200 rounded-lg shadow bg-white table-fixed">
+        <table className="w-full border border-gray-100 rounded-2xl shadow bg-white table-fixed">
           <thead>
             <tr className="bg-gray-50 text-gray-700">
-              <th className="p-3 border-b text-left font-semibold w-1/5">Name</th>
-              <th className="p-3 border-b text-left font-semibold w-1/6">Fee</th>
-              <th className="p-3 border-b text-left font-semibold w-1/6">Duration</th>
-              <th className="p-3 border-b text-left font-semibold w-1/6">Active</th>
-              <th className="p-3 border-b text-left font-semibold w-1/6">Actions</th>
+              <th className="p-4 border-b text-left font-semibold w-1/5">Name</th>
+              <th className="p-4 border-b text-left font-semibold w-1/6">Fee</th>
+              <th className="p-4 border-b text-left font-semibold w-1/6">Duration</th>
+              <th className="p-4 border-b text-left font-semibold w-1/6">Active</th>
+              <th className="p-4 border-b text-left font-semibold w-1/6">Actions</th>
             </tr>
           </thead>
           <tbody>
             {tiers.map((tier) => (
-              <tr key={tier.id} className="hover:bg-[#a50303]/5 transition">
-                <td className="p-3 border-b text-left font-medium text-gray-900">{tier.name}</td>
-                <td className="p-3 border-b text-left text-gray-700">₹{tier.fee}</td>
-                <td className="p-3 border-b text-left text-gray-700">{tier.durationMonths} mo</td>
-                <td className="p-3 border-b text-left">
+              <tr
+                key={tier.id}
+                className="hover:bg-[#a50303]/10 transition-all duration-100 rounded-xl"
+              >
+                <td className="p-4 border-b text-left font-medium text-gray-900">{tier.name}</td>
+                <td className="p-4 border-b text-left text-gray-700">₹{tier.fee}</td>
+                <td className="p-4 border-b text-left text-gray-700">{tier.durationMonths} mo</td>
+                <td className="p-4 border-b text-left">
                   {tier.isActive ? (
-                    <CheckCircle size={18} className="text-green-600 inline" />
+                    <CheckCircle size={18} className="text-green-600 inline" aria-label="Active" />
                   ) : (
-                    <XCircle size={18} className="text-red-500 inline" />
+                    <XCircle size={18} className="text-red-500 inline" aria-label="Inactive" />
                   )}
                 </td>
-                <td className="p-3 border-b text-left">
+                <td className="p-4 border-b text-left">
                   <button
                     onClick={() => handleEdit(tier)}
-                    className="flex items-center gap-1 px-3 py-1 bg-white border border-[#a50303] text-[#a50303] hover:bg-[#a50303] hover:text-white rounded transition cursor-pointer"
+                    className="flex items-center gap-2 px-4 py-2 bg-white border border-[#a50303] text-[#a50303] hover:bg-[#a50303] hover:text-white rounded-xl shadow-sm transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-[#a50303]/40"
+                    aria-label={`Update ${tier.name} tier`}
                   >
                     <Pencil size={16} />
                     Update
@@ -316,7 +331,7 @@ export default function MembershipTierAdminPage() {
             ))}
             {tiers.length === 0 && (
               <tr>
-                <td colSpan={5} className="p-4 text-center text-gray-400">
+                <td colSpan={5} className="p-6 text-center text-gray-400">
                   No membership tiers found.
                 </td>
               </tr>

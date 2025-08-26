@@ -35,48 +35,67 @@ const links = [
 
 export default function Sidebar() {
   return (
-   <motion.aside
+    <motion.aside
       initial={{ x: -80, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
-      transition={{ type: 'spring', stiffness: 120 }}
+      transition={{ type: "spring", stiffness: 120 }}
       className={cn(
-        'h-screen w-64 shadow-lg flex flex-col py-8 px-4 border-r border-[#a50303]/20 relative',
+        "h-screen w-72 shadow-xl flex flex-col py-8 px-6 border-r border-[#a50303]/20 relative bg-white",
+        "rounded-r-3xl"
       )}
       style={{
         background: `
           radial-gradient(circle at 1px 1px, #ececec 1px, transparent 1px),
           #fff
         `,
-        backgroundSize: '20px 20px',
-        color: '#a50303',
+        backgroundSize: "20px 20px",
+        color: "#a50303",
       }}
+      aria-label="Admin sidebar navigation"
     >
-      <div className="mb-10 flex items-center gap-3 px-2">
-        <span className="bg-[#a50303] rounded-full p-3 shadow text-white">
-          <ShieldCheck size={12} />
+      <div className="mb-12 flex items-center gap-4 px-2">
+        <span
+          className="bg-[#a50303] rounded-full p-3 shadow text-white flex items-center justify-center"
+          aria-label="Admin shield"
+        >
+          <ShieldCheck size={16} aria-hidden="true" />
         </span>
         <span className="font-extrabold text-2xl tracking-wide text-[#a50303] leading-tight">
           Admin Panel
         </span>
       </div>
-      
-      <nav className="flex flex-col gap-2">
+
+      <nav className="flex flex-col gap-3" aria-label="Sidebar main navigation">
         {links.map((link) => (
           <Link
             key={link.name}
             href={link.href}
             className={cn(
-              'flex items-center gap-3 px-4 py-3 rounded-lg transition-colors font-medium text-lg',
-              'hover:bg-[#a50303]/10 hover:text-[#a50303] active:bg-[#a50303]/20'
+              "group flex items-center gap-4 px-5 py-3 rounded-xl transition-all font-semibold text-lg outline-none",
+              "hover:bg-[#a50303]/10 hover:text-[#a50303] focus:bg-[#a50303]/20 focus:ring-2 focus:ring-[#a50303]/40",
+              "active:bg-[#a50303]/20",
+              "text-[#a50303]",
+              "duration-150"
             )}
-            style={{ color: '#a50303' }}
+            style={{ color: "#a50303" }}
+            tabIndex={0}
+            aria-label={link.name}
           >
-            <span className="text-2xl">{link.icon}</span>
-            {link.name}
+            <span className="text-2xl transition-transform group-hover:scale-110 group-focus:scale-110 group-active:scale-95">
+              {link.icon}
+            </span>
+            <span className="truncate">{link.name}</span>
           </Link>
         ))}
       </nav>
-     
+
+      <div className="absolute bottom-8 left-0 w-full px-6">
+        <div className="bg-[#a50303]/5 rounded-xl py-3 px-4 flex items-center gap-3 shadow-sm">
+          <span className="text-[#a50303] font-medium text-base">
+            Welcome, Admin!
+          </span>
+        </div>
+      </div>
     </motion.aside>
   );
 }

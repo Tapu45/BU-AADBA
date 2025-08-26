@@ -177,8 +177,8 @@ model Event {
 
   // Relations
   registrations     EventRegistration[]
-  gallery           PhotoAlbum?     @relation(fields: [albumId], references: [id])
-  albumId           String?
+  photoAlbums       EventPhotoAlbum[]
+  videos            Video[]  
   
   @@map("events")
 }
@@ -317,15 +317,24 @@ model PhotoAlbum {
   albumDate         DateTime
   coverImage        String?
   isPublic          Boolean         @default(true)
-  createdBy         String
-  createdAt         DateTime        @default(now())
+  createdBy         String?
+  createdAt         DateTime?        @default(now())
   updatedAt         DateTime        @updatedAt
   
   // Relations
-  photos            Photo[]
-  events            Event[]
+   photos           Photo[]
+  events            EventPhotoAlbum[]
   
   @@map("photo_albums")
+}
+
+model EventPhotoAlbum {
+  eventId           String
+  albumId           String
+  event             Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  album             PhotoAlbum @relation(fields: [albumId], references: [id], onDelete: Cascade)
+
+  @@id([eventId, albumId])
 }
 
 model Photo {
@@ -335,7 +344,7 @@ model Photo {
   imageUrl          String
   caption           String?
   uploadDate        DateTime        @default(now())
-  uploadedBy        String
+  uploadedBy        String?
   isPublic          Boolean         @default(true)
   
   @@map("photos")
@@ -350,7 +359,10 @@ model Video {
   uploadDate        DateTime        @default(now())
   duration          Int?            // in seconds
   isPublic          Boolean         @default(true)
-  createdBy         String
+  createdBy         String?
+
+  eventId           String?
+  event             Event?          @relation(fields: [eventId], references: [id], onDelete: Cascade)
   
   @@map("videos")
 }

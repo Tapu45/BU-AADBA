@@ -121,7 +121,7 @@ export default function EventsPage() {
     return () => clearInterval(interval);
   }, []);
   return (
-    <main className="max-w-8xl mx-auto px-0 py-0">
+    <main className="max-w-8xl mx-auto px-0 py-19">
       {/* Banner Section */}
       <section className="relative w-full h-[320px] mb-8 overflow-hidden">
         {/* Main background image */}

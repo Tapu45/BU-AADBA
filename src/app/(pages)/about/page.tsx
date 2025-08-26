@@ -35,7 +35,7 @@ export default function AboutPage() {
   
 
   return (
-    <div className="bg-white min-h-screen text-gray-800">
+    <div className="bg-white min-h-screen text-gray-800 py-19">
       {/* Banner */}
       <div className="max-w-8xl mx-auto">
         <header className="w-full h-40 md:h-60 relative border-b border-gray-200 overflow-hidden rounded-md">
