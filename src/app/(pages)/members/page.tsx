@@ -95,7 +95,7 @@ export default function MembersPage() {
                 <th className="py-3 px-4 text-left font-semibold text-[#800000]">Designation</th>
                 <th className="py-3 px-4 text-left font-semibold text-[#800000]">Organization</th>
                 <th className="py-3 px-4 text-left font-semibold text-[#800000]">WhatsApp No.</th>
-                <th className="py-3 px-4 text-left font-semibold text-[#800000]">Email</th>
+                <th className="py-3 px-2 text-left font-semibold text-[#800000]">Email</th>
                 <th className="py-3 px-4 text-left font-semibold text-[#800000]">Batch</th>
               </tr>
             </thead>
@@ -109,7 +109,7 @@ export default function MembersPage() {
                   <td className="py-2 px-4">{member.designation}</td>
                   <td className="py-2 px-4">{member.organization}</td>
                   <td className="py-2 px-4">{member.whatsapp}</td>
-                  <td className="py-2 px-4">{member.email}</td>
+                  <td className="py-2 px-2">{member.email}</td>
                   <td className="py-2 px-4">{member.batch}</td>
                 </tr>
               ))}
