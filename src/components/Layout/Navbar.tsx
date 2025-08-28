@@ -30,10 +30,10 @@ const Navbar: React.FC = () => {
         </Link>
         <div className="flex flex-col">
           <span className="text-yellow-300 text-base font-bold leading-tight">
-            BUMBA Alumni Association
+             Alumni Association
           </span>
           <span className="text-white text-sm font-semibold leading-tight">
-            Department of Business Administration
+            Department of Business Administration(AADBA)
           </span>
           <span className="text-yellow-200 text-xs leading-tight">
             BERHAMPUR UNIVERSITY
