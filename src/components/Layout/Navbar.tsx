@@ -32,7 +32,7 @@ const Navbar: React.FC = () => {
           <span className="text-yellow-300 text-base font-bold leading-tight">
              Alumni Association
           </span>
-          <span className="text-white text-sm font-semibold leading-tight">
+          <span className="text-yellow-300 text-sm font-semibold leading-tight">
             Department of Business Administration(AADBA)
           </span>
           <span className="text-yellow-200 text-xs leading-tight">
