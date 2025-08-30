@@ -81,7 +81,7 @@ const Navbar: React.FC = () => {
       }
     }}
   >
-    Members
+    Faculty Members
   </span>
   {showMembersMenu && (
     <ul className="absolute right-0 mt-2 bg-[#a50303] rounded shadow-lg min-w-max z-10">
