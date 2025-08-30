@@ -11,6 +11,9 @@ import {
   Image,
   ShieldCheck,
   Building2,
+  MemoryStick,
+  PersonStanding,
+  User,
 } from "lucide-react";
 
 export function cn(...classes: (string | undefined | false)[]) {
@@ -32,7 +35,8 @@ const links = [
     icon: <Building2 size={22} />,
   },
   { name: "Gallery", href: "/admin/gallery", icon: <Image size={22} /> },
-  { name: "Faculty Members", href: "/admin/faculty-members", icon: <Building2 size={22} /> },
+  { name: "Faculty Members", href: "/admin/faculty-members", icon: <User size={22} /> },
+  { name: "Newspaper Clippings", href: "/admin/newspapper-clippings", icon: <Newspaper size={22} /> }
 ];
 
 export default function Sidebar() {

@@ -615,3 +615,13 @@ enum VisitorType {
   NATIONAL
   INTERNATIONAL
 }
+
+model NewspaperClipping {
+  id        String   @id @default(cuid())
+  title     String
+  imageUrl  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("newspaper_clippings")
+}
