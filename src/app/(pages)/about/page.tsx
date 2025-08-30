@@ -331,23 +331,23 @@ export default function AboutPage() {
                   },
                   {
                     name: "Dr. Sharada Prasad Sahoo, Faculty Member",
-                    img: "https://randomuser.me/api/portraits/men/38.jpg",
+                    img: "/assets/executive/Dr. Sarada.jpeg",
                   },
                   {
                     name: "Dr. Biswajit Prasad Chhatoi, Faculty Member",
-                    img: "https://randomuser.me/api/portraits/men/39.jpg",
+                    img: "/assets/executive/Biswajeet.jpeg",
                   },
                   {
                     name: "Dr. Saroj Kumar Dash (2002-04)",
-                    img: "https://randomuser.me/api/portraits/men/40.jpg",
+                    img: "/assets/executive/Saroj.jpeg",
                   },
                   {
                     name: "Mr. Nihar Ranjan Nayak (1992-94)",
-                    img: "https://randomuser.me/api/portraits/men/41.jpg",
+                    img: "/assets/executive/Nihar Nayak.jpeg",
                   },
                   {
                     name: "Mr. Alok Kumar Patra (2003-05)",
-                    img: "https://randomuser.me/api/portraits/men/42.jpg",
+                    img: "/assets/executive/Alok.jpeg",
                   },
                   {
                     name: "Mr. Ashyashree Praharaj (2016-18)",
@@ -355,15 +355,15 @@ export default function AboutPage() {
                   },
                   {
                     name: "Dr. Chandra Sekhar Pattanayak (1990-92)",
-                    img: "https://randomuser.me/api/portraits/men/44.jpg",
+                    img: "/assets/executive/Chandrasekhar.jpeg",
                   },
                   {
                     name: "Dr. Sitanath Raiguru (2007-09)",
-                    img: "https://randomuser.me/api/portraits/men/45.jpg",
+                    img: "/assets/executive/Sitanath.jpeg",
                   },
                   {
                     name: "Dr. Apoorva Behera (2021)",
-                    img: "https://randomuser.me/api/portraits/women/46.jpg",
+                    img: "/assets/executive/Apoorva.jpeg",
                   },
                 ].map((member, idx) => (
                   <div
@@ -402,7 +402,7 @@ export default function AboutPage() {
                 Association of Berhampur University:
               </p>
               <a
-                href="https://buodisha.edu.in/wp-content/uploads/2023/11/1700046036.pdf"
+                href="/Certificate.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-block bg-[#800000] text-white px-5 py-2 rounded font-semibold shadow hover:bg-[#800000]/90 transition"

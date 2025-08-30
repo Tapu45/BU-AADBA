@@ -1,11 +1,17 @@
-"use client"
+"use client";
 
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Table, TableHeader, TableRow, TableCell, TableBody } from "@/components/ui/table";
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableCell,
+  TableBody,
+} from "@/components/ui/table";
 import { motion, AnimatePresence } from "framer-motion";
 import { BookOpen } from "lucide-react";
 
@@ -165,6 +171,26 @@ const page: React.FC = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const handleDelete = async (id: string) => {
+    if (!window.confirm("Are you sure you want to delete this newsletter?"))
+      return;
+    try {
+      const res = await fetch("/api/admin/newsletter", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      const result = await res.json();
+      if (!res.ok) {
+        alert(result.error || "Delete failed");
+      } else {
+        await fetchNewsletters();
+      }
+    } catch (err) {
+      alert("Delete error");
+    }
+  };
+
   const resetForm = () => {
     setEditingId(null);
     setForm(initialForm);
@@ -202,7 +228,9 @@ const page: React.FC = () => {
           >
             <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-6">
               <div className="col-span-2">
-                <label className="block text-black font-semibold mb-1">Title</label>
+                <label className="block text-black font-semibold mb-1">
+                  Title
+                </label>
                 <Input
                   name="title"
                   value={form.title}
@@ -212,7 +240,9 @@ const page: React.FC = () => {
                 />
               </div>
               <div className="col-span-2">
-                <label className="block text-black font-semibold mb-1">Description</label>
+                <label className="block text-black font-semibold mb-1">
+                  Description
+                </label>
                 <Textarea
                   name="description"
                   value={form.description}
@@ -221,7 +251,9 @@ const page: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-black font-semibold mb-1">Cover Image</label>
+                <label className="block text-black font-semibold mb-1">
+                  Cover Image
+                </label>
                 <Input
                   type="file"
                   accept="image/*"
@@ -242,7 +274,9 @@ const page: React.FC = () => {
                 )}
               </div>
               <div>
-                <label className="block text-black font-semibold mb-1">File</label>
+                <label className="block text-black font-semibold mb-1">
+                  File
+                </label>
                 <Input
                   type="file"
                   accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt"
@@ -266,7 +300,9 @@ const page: React.FC = () => {
                 )}
               </div>
               <div>
-                <label className="block text-black font-semibold mb-1">Author</label>
+                <label className="block text-black font-semibold mb-1">
+                  Author
+                </label>
                 <Input
                   name="author"
                   value={form.author}
@@ -275,7 +311,9 @@ const page: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-black font-semibold mb-1">Editor</label>
+                <label className="block text-black font-semibold mb-1">
+                  Editor
+                </label>
                 <Input
                   name="editor"
                   value={form.editor}
@@ -284,7 +322,9 @@ const page: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-black font-semibold mb-1">Volume</label>
+                <label className="block text-black font-semibold mb-1">
+                  Volume
+                </label>
                 <Input
                   type="number"
                   name="volume"
@@ -295,7 +335,9 @@ const page: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-black font-semibold mb-1">Issue</label>
+                <label className="block text-black font-semibold mb-1">
+                  Issue
+                </label>
                 <Input
                   type="number"
                   name="issue"
@@ -305,7 +347,7 @@ const page: React.FC = () => {
                   className="bg-white text-black border-[#a50303] focus:ring-[#a50303]"
                 />
               </div>
-           
+
               <div className="col-span-2 flex justify-end gap-4 mt-2">
                 <Button
                   type="button"
@@ -332,14 +374,16 @@ const page: React.FC = () => {
       </AnimatePresence>
 
       <div className="max-w-5xl mx-auto">
-        <h2 className="text-2xl font-bold text-black mb-4">Existing Newsletters</h2>
+        <h2 className="text-2xl font-bold text-black mb-4">
+          Existing Newsletters
+        </h2>
         <Table className="rounded-xl overflow-hidden border border-[#a50303] shadow">
           <TableHeader className="bg-[#a50303] text-white">
             <TableRow>
               <TableCell className="font-bold">Title</TableCell>
               <TableCell className="font-bold">Date</TableCell>
               <TableCell className="font-bold">Author</TableCell>
-              <TableCell className="font-bold">Public</TableCell>
+             
               <TableCell className="font-bold">Actions</TableCell>
             </TableRow>
           </TableHeader>
@@ -351,16 +395,22 @@ const page: React.FC = () => {
                   {new Date(n.publicationDate).toLocaleDateString()}
                 </TableCell>
                 <TableCell className="text-black">{n.author}</TableCell>
-                <TableCell className="text-black">
-                  {n.isPublic ? "Yes" : "No"}
-                </TableCell>
-                <TableCell>
+              
+                <TableCell className="flex gap-2">
                   <Button
                     size="sm"
                     className="bg-[#a50303] text-white hover:bg-black"
                     onClick={() => handleEdit(n)}
                   >
                     Edit
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="border-[#a50303] text-[#a50303] hover:bg-[#a50303] hover:text-white"
+                    onClick={() => handleDelete(n.id)}
+                  >
+                    Delete
                   </Button>
                 </TableCell>
               </TableRow>
@@ -373,6 +423,6 @@ const page: React.FC = () => {
       </div>
     </div>
   );
-}
+};
 
 export default page;

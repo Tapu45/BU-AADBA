@@ -10,6 +10,7 @@ import {
   HandCoins,
   Image,
   ShieldCheck,
+  Building2,
 } from "lucide-react";
 
 export function cn(...classes: (string | undefined | false)[]) {
@@ -26,11 +27,12 @@ const links = [
   },
   { name: "Events", href: "/admin/events", icon: <Calendar size={22} /> },
   {
-    name: "Donations",
-    href: "/admin/donations",
-    icon: <HandCoins size={22} />,
+    name: "Industrial tours",
+    href: "/admin/industrial-tour",
+    icon: <Building2 size={22} />,
   },
   { name: "Gallery", href: "/admin/gallery", icon: <Image size={22} /> },
+  { name: "Faculty Members", href: "/admin/faculty-members", icon: <Building2 size={22} /> },
 ];
 
 export default function Sidebar() {

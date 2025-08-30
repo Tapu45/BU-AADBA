@@ -322,8 +322,9 @@ model PhotoAlbum {
   updatedAt         DateTime        @updatedAt
   
   // Relations
-   photos           Photo[]
+  photos           Photo[]
   events            EventPhotoAlbum[]
+  industrialTours   IndustrialTourPhotoAlbum[]
   
   @@map("photo_albums")
 }
@@ -365,6 +366,31 @@ model Video {
   event             Event?          @relation(fields: [eventId], references: [id], onDelete: Cascade)
   
   @@map("videos")
+}
+
+model IndustrialTour {
+  id          String      @id @default(cuid())
+  title       String
+  year        Int
+  description String?     @db.Text
+  coverImage  String?
+  createdBy   String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  // Relations
+  photoAlbums IndustrialTourPhotoAlbum[]
+
+  @@map("industrial_tours")
+}
+
+model IndustrialTourPhotoAlbum {
+  tourId     String
+  albumId    String
+  tour       IndustrialTour @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  album      PhotoAlbum     @relation(fields: [albumId], references: [id], onDelete: Cascade)
+
+  @@id([tourId, albumId])
 }
 
 // Donations
@@ -554,4 +580,38 @@ model SiteConfiguration {
   updatedAt         DateTime        @updatedAt
   
   @@map("site_configuration")
+}
+
+model FacultyMember {
+  id          String   @id @default(cuid())
+  name        String
+  imageUrl    String?
+  designation String?
+  status      FacultyStatus @default(EXISTING)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("faculty_members")
+}
+
+enum FacultyStatus {
+  EXISTING
+  FORMER
+}
+
+model Visitor {
+  id          String   @id @default(cuid())
+  name        String
+  designation String
+  photoUrl    String?
+  type        VisitorType @default(NATIONAL)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("visitors")
+}
+
+enum VisitorType {
+  NATIONAL
+  INTERNATIONAL
 }

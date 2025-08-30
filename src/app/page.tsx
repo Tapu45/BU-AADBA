@@ -25,7 +25,7 @@ export default function HomePage() {
       <UpcomingEvent />
       <LatestPublications/> */}
       <PastEvents />
-      <News />
+      {/* <News /> */}
       <Gallery />
       <NotableAlumini />
 

@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 const Navbar: React.FC = () => {
   const pathname = usePathname();
   const [showRegisterMenu, setShowRegisterMenu] = useState(false);
+  const [showMembersMenu, setShowMembersMenu] = useState(false);
 
   // Hide Navbar for /auth and /admin routes
   if (pathname.startsWith("/auth") || pathname.startsWith("/admin")) {
@@ -18,7 +19,7 @@ const Navbar: React.FC = () => {
       className="w-full px-6 py-4 flex items-center justify-between fixed top-0 z-50"
       style={{ backgroundColor: "#a50303" }}
     >
-      <div className="flex items-center space-x-4">
+     <div className="flex items-center space-x-4">
         <Link href="/" passHref>
           <Image
             src="/logo.png"
@@ -39,6 +40,13 @@ const Navbar: React.FC = () => {
             BERHAMPUR UNIVERSITY
           </span>
         </div>
+        <Image
+          src="/logo.jpeg"
+          alt="Berhampur University Logo"
+          className="h-10 w-auto ml-2 rounded"
+          width={40}
+          height={40}
+        />
       </div>
 
       <ul className="flex space-x-6">
@@ -61,14 +69,44 @@ const Navbar: React.FC = () => {
         {/* <li>
           <Link href="/executive-committee" className="text-white hover:text-yellow-300 transition">Executive Committee</Link>
         </li> */}
-        <li>
-          <Link
-            href="/members"
-            className="text-white hover:text-yellow-300 transition"
-          >
-            Members
-          </Link>
-        </li>
+     <li className="relative">
+  <span
+    className="text-white hover:text-yellow-300 transition cursor-pointer"
+    onClick={() => setShowMembersMenu((s) => !s)}
+    role="button"
+    tabIndex={0}
+    onKeyDown={(e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        setShowMembersMenu((s) => !s);
+      }
+    }}
+  >
+    Members
+  </span>
+  {showMembersMenu && (
+    <ul className="absolute right-0 mt-2 bg-[#a50303] rounded shadow-lg min-w-max z-10">
+      <li>
+        <Link
+          href="/faculty-members/existing"
+          className="block px-4 py-2 text-white hover:text-yellow-300"
+          onClick={() => setShowMembersMenu(false)}
+        >
+          Existing
+        </Link>
+      </li>
+      <li>
+        <Link
+          href="/faculty-members/former"
+          className="block px-4 py-2 text-white hover:text-yellow-300"
+          onClick={() => setShowMembersMenu(false)}
+        >
+          Former
+        </Link>
+      </li>
+     
+    </ul>
+  )}
+</li>
         <li>
           <Link
             href="/events"

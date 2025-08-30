@@ -2,7 +2,7 @@ import { prisma } from '@/lib/Prisma';
 
 // Upload a photo to an album
 export async function POST(request: Request, { params }: { params: { albumId: string } }) {
-  const { albumId } = params;
+  const { albumId } = await params; // <-- await here
   const body = await request.json();
   const { imageUrl, caption, isPublic = true } = body;
 

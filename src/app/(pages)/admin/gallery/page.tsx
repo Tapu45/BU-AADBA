@@ -12,7 +12,7 @@ const fetchAlbums = async () => {
 
 const GalleryAdminPage = () => {
   const [albums, setAlbums] = useState<
-    { id: string; name: string; description?: string; photos: { id: string; url: string }[] }[]
+    { id: string; name: string; description?: string; photos: { id: string; imageUrl: string }[] }[]
   >([]);
   const [showAlbumModal, setShowAlbumModal] = useState(false);
   const [albumName, setAlbumName] = useState("");
@@ -233,7 +233,7 @@ const GalleryAdminPage = () => {
                             className="relative group"
                           >
                             <img
-                              src={photo.url}
+                              src={photo.imageUrl}
                               alt="Uploaded"
                               className="w-24 h-24 object-cover rounded-xl border border-[#eaeaea] shadow"
                             />
