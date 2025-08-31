@@ -22,7 +22,6 @@ export default function AboutPage() {
   // Section data for anchor navigation
   const sections = [
     { id: "vision", label: "VISION", icon: ShieldCheck },
-    { id: "aims", label: "Aims and Objective", icon: Target },
     { id: "executive", label: "Executive Body", icon: Users },
     {
       id: "certificate",
@@ -98,7 +97,7 @@ export default function AboutPage() {
         {/* Main content area - all sections in scroll */}
         <div className="max-w-7xl mx-auto px-4 py-8 space-y-10">
           {/* VISION */}
-          <section id="vision">
+           <section id="vision">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -109,67 +108,25 @@ export default function AboutPage() {
               <div className="relative flex items-center gap-3 mb-4 z-10">
                 <ShieldCheck size={36} className="text-[#800000] drop-shadow" />
                 <h2 className="text-3xl md:text-4xl font-extrabold text-[#800000] tracking-tight">
-                  Our Vision
+                  Vision & Mission
                 </h2>
                 <div className="flex-1 h-1 bg-gradient-to-r from-[#800000] via-[#800000]/30 to-transparent rounded-full ml-3" />
               </div>
               <div className="relative rounded-xl p-6 z-10">
-                <ul className="list-disc space-y-4 ml-8 text-gray-800 text-base leading-relaxed">
+                <h3 className="text-2xl font-bold text-[#800000] mb-2">Vision</h3>
+                <p className="text-gray-800 text-base leading-relaxed mb-6">
+                  The Department aspires to develop and project our university's MBA programme as a distinct one based on academic excellence and thought leadership, which would promote the cult of entrepreneurship and innovative leaders.
+                </p>
+                <h3 className="text-2xl font-bold text-[#800000] mb-2">Mission</h3>
+                <ul className="list-disc space-y-3 ml-8 text-gray-800 text-base leading-relaxed">
                   <li>
-                    <span className="font-semibold text-[#800000]">
-                      Global Outreach:
-                    </span>{" "}
-                    The Association shall support the university's mission by
-                    outreaching to its alumni all over the world.
+                    To produce tech-savvy entrepreneur management graduates to meet the changing requirements of the industries.
                   </li>
                   <li>
-                    <span className="font-semibold text-[#800000]">
-                      Platform for Interaction:
-                    </span>{" "}
-                    The Association shall provide a platform for interaction
-                    among alumni, current students, parents and friends by:
-                    <ul className="list-disc ml-6 mt-2 space-y-2 text-gray-700 text-base leading-relaxed">
-                      <li>
-                        Partnering, engaging and connecting with alumni in the
-                        development and progress of the university.
-                      </li>
-                      <li>
-                        Encouraging alumni to contribute to the overall growth
-                        of the university through academic, intellectual,
-                        research, finance, endowments, scholarships and
-                        internships as well as help students in placement for
-                        jobs, higher studies etc.
-                      </li>
-                      <li>
-                        Providing and promoting opportunities for volunteer
-                        engagement, professional association and career
-                        development, leadership, and fellowship among alumni and
-                        students.
-                      </li>
-                      <li>
-                        Making alumni a partner in significant decision making
-                        for development of the university.
-                      </li>
-                      <li>
-                        Providing opportunities and possible university space,
-                        resources and intellect for establishment of joint
-                        innovation/incubation centres.
-                      </li>
-                      <li>
-                        Promoting/publishing research activities and
-                        achievements of the alumni through exhibitions /
-                        newsletters etc.
-                      </li>
-                      <li>
-                        Promotion of academic or educational activities by
-                        organizing or sponsoring seminars, guest lecturers etc.
-                      </li>
-                      <li>
-                        Promotion of cultural, recreational and social
-                        activities beneficial to the members and to the society
-                        at large.
-                      </li>
-                    </ul>
+                    To foster research in the paired disciplines of management.
+                  </li>
+                  <li>
+                    To promote continuous learning through an effective industry-academia interface.
                   </li>
                 </ul>
               </div>
@@ -177,14 +134,14 @@ export default function AboutPage() {
           </section>
 
           {/* Aims and Objective */}
-          <section id="aims">
+          {/* <section id="aims">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
               className="space-y-8"
             >
-              {/* Beautiful Heading */}
+             
               <div className="flex items-center gap-3 mb-4">
                 <Target size={36} className="text-[#800000] drop-shadow" />
                 <h2 className="text-3xl md:text-4xl font-extrabold text-[#800000] tracking-tight">
@@ -249,7 +206,7 @@ export default function AboutPage() {
                 </ul>
               </div>
             </motion.div>
-          </section>
+          </section> */}
 
           {/* Executive Body */}
           <section id="executive">
@@ -272,25 +229,25 @@ export default function AboutPage() {
                     role: "President",
                     name: "Dr. Nihar Ranjan Misra",
                     years: "1988-1990",
-                    img: "https://randomuser.me/api/portraits/men/32.jpg",
+                    img: "/assets/executive/Dr. Nihar Ranjan Mishra.jpg",
                   },
                   {
                     role: "Vice President",
                     name: "M Dhananjaya Reddy",
                     years: "1999-2001",
-                    img: "https://randomuser.me/api/portraits/men/33.jpg",
+                    img: "/assets/executive/M Dhananjay Reddy.jpeg",
                   },
                   {
                     role: "Secretary",
                     name: "Jitendra Kumar Sahoo",
                     years: "2013-15",
-                    img: "https://randomuser.me/api/portraits/men/34.jpg",
+                    img: "/assets/executive/jitendra.jpeg",
                   },
                   {
                     role: "Joint Secretary",
                     name: "Mr. Kiran Patra",
                     years: "2023-25",
-                    img: "https://randomuser.me/api/portraits/men/35.jpg",
+                    img: "/assets/executive/Kiran Patro.jpeg",
                   },
                   {
                     role: "Treasurer",

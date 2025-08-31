@@ -104,7 +104,7 @@ const QuickLinks: React.FC = () => {
         backgroundSize: "auto",
       }}
     >
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         {/* Removed single top title and placed titles inside each column to align tops */}
         <div className="flex flex-col lg:flex-row gap-8 w-full items-start">
           {/* Left: Quick Links Column */}

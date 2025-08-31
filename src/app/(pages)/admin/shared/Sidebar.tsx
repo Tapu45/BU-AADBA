@@ -14,6 +14,7 @@ import {
   MemoryStick,
   PersonStanding,
   User,
+  Gift,
 } from "lucide-react";
 
 export function cn(...classes: (string | undefined | false)[]) {
@@ -36,7 +37,9 @@ const links = [
   },
   { name: "Gallery", href: "/admin/gallery", icon: <Image size={22} /> },
   { name: "Faculty Members", href: "/admin/faculty-members", icon: <User size={22} /> },
-  { name: "Newspaper Clippings", href: "/admin/newspapper-clippings", icon: <Newspaper size={22} /> }
+  { name: "Newspaper Clippings", href: "/admin/newspapper-clippings", icon: <Newspaper size={22} /> },
+  { name: "Notable Alumini", href: "/admin/notable-alumini", icon: <Gift size={22} /> },
+  { name: "Visitors", href: "/admin/visitor", icon: <PersonStanding size={22} /> },
 ];
 
 export default function Sidebar() {
@@ -47,7 +50,7 @@ export default function Sidebar() {
       transition={{ type: "spring", stiffness: 120 }}
       className={cn(
         "h-screen w-72 shadow-xl flex flex-col py-8 px-6 border-r border-[#a50303]/20 relative bg-white",
-        "rounded-r-3xl"
+        "rounded-r-3xl overflow-y-auto"
       )}
       style={{
         background: `
@@ -95,13 +98,8 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      <div className="absolute bottom-8 left-0 w-full px-6">
-        <div className="bg-[#a50303]/5 rounded-xl py-3 px-4 flex items-center gap-3 shadow-sm">
-          <span className="text-[#a50303] font-medium text-base">
-            Welcome, Admin!
-          </span>
-        </div>
-      </div>
+   
     </motion.aside>
   );
 }
+

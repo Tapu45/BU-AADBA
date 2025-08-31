@@ -602,7 +602,7 @@ enum FacultyStatus {
 model Visitor {
   id          String   @id @default(cuid())
   name        String
-  designation String
+  designation String?
   photoUrl    String?
   type        VisitorType @default(NATIONAL)
   createdAt   DateTime @default(now())
@@ -624,4 +624,17 @@ model NewspaperClipping {
   updatedAt DateTime @updatedAt
 
   @@map("newspaper_clippings")
+}
+
+model NotableAlumni {
+  id          String   @id @default(cuid())
+  name        String
+  batch       Int
+  designation String
+  company     String
+  imageUrl    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("notable_alumni")
 }
