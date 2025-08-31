@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useState, useEffect } from "react";
 import Navbar from "../../Layout/Navbar";
@@ -15,27 +15,37 @@ const Hero: React.FC = () => {
   ];
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [imageOpacity, setImageOpacity] = useState(1);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+      // Fade out
+      setImageOpacity(0);
+      // After fade out, change image and fade in
+      setTimeout(() => {
+        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+        setImageOpacity(1);
+      }, 500); // Half of transition time
     }, 9000); // Change image every 9 seconds
 
     return () => clearInterval(interval);
   }, [images.length]);
 
   return (
-    <section
-      className="relative w-full h-screen flex flex-col"
-      style={{
-        backgroundImage: `url(${images[currentImageIndex]})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        transition: "background-image 1s ease-in-out", // Smooth transition
-      }}
-    >
+    <section className="relative w-full h-screen flex flex-col">
+      {/* Background Image with Smooth Transition */}
+      <div className="absolute inset-0">
+        <img
+          src={images[currentImageIndex]}
+          alt="Hero Background"
+          className="w-full h-full object-cover transition-opacity duration-1000 ease-in-out"
+          style={{ opacity: imageOpacity }}
+        />
+      </div>
+
       {/* Soft Overlay */}
       <div className="absolute inset-0 bg-black/40" />
+
       {/* Content moved to bottom right */}
       <div className="relative z-10 flex flex-1 items-end justify-end text-right px-8 pb-12">
         <div>
