@@ -45,7 +45,7 @@ const events = [
   },
 ];
 
-const AUTO_SLIDE_INTERVAL = 3500;
+const AUTO_SLIDE_INTERVAL = 4000;
 
 const PastEvents: React.FC = () => {
   const [index, setIndex] = useState(0);
@@ -58,42 +58,68 @@ const PastEvents: React.FC = () => {
   }, [index]);
 
   return (
-    <section className="max-w-10xl py-8 px-0 flex flex-col items-center">
-      <h2 className="text-2xl md:text-3xl font-bold text-[#a50303] mb-2 text-center">
-        Past Events
-      </h2>
-      <p className="text-gray-700 text-center mb-6 max-w-2xl">
-        Relive some of our most memorable alumni gatherings, sports days, and
-        cultural celebrations.
-      </p>
-     <div className="relative w-full max-w-7xl h-[340px] md:h-[420px] mx-auto overflow-hidden rounded-xl shadow-lg">
-        <img
-          src={events[index].image}
-          alt={events[index].caption}
-          className="absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-700 opacity-100 z-10"
-        />
-        {/* Caption Layer - always visible for current image */}
-        <div
-          className="absolute bottom-0 left-0 w-full px-6 py-4 text-white text-lg font-semibold rounded-b-xl pointer-events-none"
-          style={{
-            background:
-              "linear-gradient(to top, rgba(0,0,0,0.85) 80%, rgba(0,0,0,0.3) 100%)",
-          }}
-        >
-          {events[index].caption}
+    <section className="w-full py-8 bg-gray-50">
+      <div className="max-w-6xl mx-auto px-6">
+        {/* Header Section */}
+        <div className="text-center mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-red-800 mb-4">
+            Past Events
+          </h2>
+          <p className="text-gray-600 text-lg max-w-2xl mx-auto leading-relaxed">
+            Relive some of our most memorable alumni gatherings, sports days, and
+            cultural celebrations that have shaped our community.
+          </p>
         </div>
-        {/* Dots navigation */}
-        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
-          {events.map((_, i) => (
-            <button
-              key={i}
-              className={`w-3 h-3 rounded-full border border-white ${
-                i === index ? "bg-[#a50303]" : "bg-white/60"
-              }`}
-              onClick={() => setIndex(i)}
-              aria-label={`Go to slide ${i + 1}`}
+
+        {/* Main Carousel */}
+        <div className="relative">
+          <div className="relative w-full h-[400px] md:h-[500px] overflow-hidden rounded-2xl shadow-xl">
+            <img
+              src={events[index].image}
+              alt={events[index].caption}
+              className="w-full h-full object-cover transition-all duration-1000 ease-out"
             />
-          ))}
+            
+            {/* Caption Overlay */}
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent pt-20 pb-6 px-8">
+              <h3 className="text-white text-xl md:text-2xl font-semibold leading-tight">
+                {events[index].caption}
+              </h3>
+            </div>
+          </div>
+
+          {/* Navigation Dots */}
+          <div className="flex justify-center mt-8 space-x-3">
+            {events.map((_, i) => (
+              <button
+                key={i}
+                className={`transition-all duration-300 ${
+                  i === index 
+                    ? "w-8 h-3 bg-red-800 rounded-full" 
+                    : "w-3 h-3 bg-gray-300 rounded-full hover:bg-gray-400"
+                }`}
+                onClick={() => setIndex(i)}
+                aria-label={`Go to slide ${i + 1}`}
+              />
+            ))}
+          </div>
+
+          {/* Progress Bar */}
+          <div className="mt-6 max-w-md mx-auto">
+            <div className="w-full bg-gray-200 rounded-full h-1">
+              <div 
+                className="bg-red-800 h-1 rounded-full transition-all duration-1000 ease-out"
+                style={{ width: `${((index + 1) / events.length) * 100}%` }}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Event Counter */}
+        <div className="text-center mt-8">
+          <span className="text-sm text-gray-500 font-medium">
+            {index + 1} of {events.length} events
+          </span>
         </div>
       </div>
     </section>

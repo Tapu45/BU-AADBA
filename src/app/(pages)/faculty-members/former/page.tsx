@@ -42,99 +42,69 @@ export default function FormerFacultyPage() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-[#f8f8fa] px-4 py-28">
-      <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.36 }}
-        className="max-w-6xl mx-auto"
-      >
-        {/* Beautiful Heading */}
-        <header className="mb-10 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-[#a50303] tracking-tight relative inline-block">
-            Former Members
-            <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-2/3 h-[4px] bg-[#a50303] opacity-20 rounded-full"></span>
+    <main className="min-h-screen bg-white">
+      <div className="max-w-7xl mx-auto px-6 py-26">
+        {/* Clean Header */}
+        <div className="text-center mb-7">
+          <h1 className="text-4xl font-bold text-red-800/90 mb-3">
+            Former Faculty Members
           </h1>
-          <p className="text-lg text-zinc-600 mt-4 max-w-xl mx-auto">
-            A curated list of former faculty members
-          </p>
-        </header>
+          <div className="w-16 h-0.5 bg-red-800 mx-auto"></div>
+        </div>
 
-        <section>
-          {loading ? (
-            <div className="py-24 flex items-center justify-center">
-              <svg
-                className="animate-spin h-8 w-8 text-[#a50303]"
-                viewBox="0 0 24 24"
+        {loading ? (
+          <div className="flex justify-center py-20">
+            <div className="w-8 h-8 border-2 border-red-800 border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        ) : members.length === 0 ? (
+          <div className="text-center py-20">
+            <div className="inline-block p-8">
+              <ImagePlus className="w-10 h-10 text-gray-400 mx-auto mb-3" />
+              <p className="text-gray-500 text-sm">No former members found</p>
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+            {members.map((member, index) => (
+              <motion.div
+                key={member.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ 
+                  duration: 0.5, 
+                  delay: index * 0.08,
+                  ease: "easeOut"
+                }}
+                className="relative aspect-square overflow-hidden rounded-lg bg-gray-100 shadow-sm hover:shadow-md transition-shadow duration-300"
               >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                  fill="none"
-                />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-                />
-              </svg>
-            </div>
-          ) : members.length === 0 ? (
-            <div className="py-20 text-center">
-              <div className="inline-block bg-white rounded-xl border border-[#eaeaea] p-8 shadow-sm">
-                <ImagePlus className="w-12 h-12 text-[#a50303] mx-auto opacity-40" />
-                <p className="text-lg font-medium text-gray-600 mt-4">
-                  No former faculty members found.
-                </p>
-                <p className="text-sm text-gray-400 mt-1">
-                  They will appear here when marked as FORMER.
-                </p>
-              </div>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {members.map((m) => (
-                <motion.article
-                  key={m.id}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.28 }}
-                  className="bg-white rounded-xl border border-[#eaeaea] overflow-hidden shadow-sm relative h-64"
-                  style={{
-                    backgroundImage: m.imageUrl ? `url(${m.imageUrl})` : "none",
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    backgroundRepeat: "no-repeat",
-                  }}
-                >
-                  {/* Overlay for name and designation at the bottom */}
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#a50303]/80 to-transparent p-4">
-                    <h3 className="text-lg font-semibold text-white">
-                      {m.name}
-                    </h3>
-                    {m.designation && (
-                      <p className="text-sm text-white/80 mt-1">
-                        {m.designation}
-                      </p>
-                    )}
+                {member.imageUrl ? (
+                  <img
+                    src={member.imageUrl}
+                    alt={member.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
+                    <ImagePlus className="w-8 h-8 text-gray-400" />
                   </div>
+                )}
 
-                  {/* Fallback for no image */}
-                  {!m.imageUrl && (
-                    <div className="flex flex-col items-center justify-center h-full bg-gradient-to-br from-[#f8eaea] via-[#f8f8fa] to-[#f8eaea]">
-                      <ImagePlus className="w-12 h-12 text-[#a50303] opacity-40" />
-                    </div>
+                {/* Always visible red overlay with names */}
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-red-800/90 via-red-800/70 to-transparent p-3">
+                  <h3 className="text-white text-sm font-semibold truncate">
+                    {member.name}
+                  </h3>
+                  {member.designation && (
+                    <p className="text-white/90 text-xs mt-1 truncate">
+                      {member.designation}
+                    </p>
                   )}
-                </motion.article>
-              ))}
-            </div>
-          )}
-        </section>
-      </motion.div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
+      </div>
     </main>
   );
 }

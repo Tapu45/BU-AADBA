@@ -4,16 +4,28 @@ import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { motion, AnimatePresence, easeInOut, easeIn } from "framer-motion";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 const Navbar: React.FC = () => {
   const pathname = usePathname();
   const [showRegisterMenu, setShowRegisterMenu] = useState(false);
   const [showMembersMenu, setShowMembersMenu] = useState(false);
   const [showEventsMenu, setShowEventsMenu] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
-  const membersMenuRef = useRef<HTMLUListElement>(null);
-  const registerMenuRef = useRef<HTMLUListElement>(null);
-  const eventsMenuRef = useRef<HTMLUListElement>(null);
+  const membersMenuRef = useRef<HTMLDivElement>(null);
+  const registerMenuRef = useRef<HTMLDivElement>(null);
+  const eventsMenuRef = useRef<HTMLDivElement>(null);
+
+  // Handle scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -47,249 +59,390 @@ const Navbar: React.FC = () => {
   if (pathname.startsWith("/auth") || pathname.startsWith("/admin")) {
     return null;
   }
- return (
-  <nav
-    className="w-full px-6 py-4 flex items-center justify-between fixed top-0 z-50"
-    style={{ backgroundColor: "#a50303" }}
-  >
-    {/* Left section: BU Logo, Alumni Association, Berhampur University */}
-    <div className="flex items-center space-x-4">
-      <Link href="/" passHref>
-        <Image
-          src="/logo.png"
-          alt="BU Logo"
-          className="h-10 w-auto"
-          width={40}
-          height={40}
-        />
-      </Link>
-      <div className="flex flex-col">
-        <span className="text-yellow-300 text-base font-bold leading-tight">
-          Alumni Association
-        </span>
-        <span className="text-yellow-300 text-sm font-semibold leading-tight">
-          Department of Business Administration(AADBA)
-        </span>
-        <span className="text-yellow-200 text-xs leading-tight">
-          BERHAMPUR UNIVERSITY
-        </span>
+
+  const menuVariants = {
+    hidden: { 
+      opacity: 0, 
+      y: -15, 
+      scale: 0.95,
+      filter: "blur(10px)"
+    },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      scale: 1,
+      filter: "blur(0px)",
+      transition: {
+        duration: 0.3,
+        ease: easeInOut
+      }
+    },
+    exit: { 
+      opacity: 0, 
+      y: -15, 
+      scale: 0.95,
+      filter: "blur(10px)",
+      transition: {
+        duration: 0.2,
+        ease: easeIn
+      }
+    }
+  };
+
+  return (
+    <nav className={`w-full px-6 py-2 flex items-center justify-between fixed top-0 z-50 transition-all duration-500 ${
+      scrolled 
+        ? "bg-white/95 backdrop-blur-xl shadow-2xl border-b border-gray-100" 
+        : "bg-gradient-to-r from-red-800 via-red-700 to-red-800 shadow-lg"
+    }`}>
+      {/* Left section: BU Logo and Brand */}
+      <div className="flex items-center space-x-4">
+        <Link href="/" passHref className="group">
+          <motion.div
+            whileHover={{ scale: 1.05, rotate: 2 }}
+            whileTap={{ scale: 0.95 }}
+            className="transition-all duration-300"
+          >
+            <Image
+              src="/logo.png"
+              alt="BU Logo"
+              className={`h-12 w-auto drop-shadow-lg transition-all duration-300 ${
+                scrolled ? "filter brightness-110" : ""
+              }`}
+              width={48}
+              height={48}
+            />
+          </motion.div>
+        </Link>
+        
+        <div className="flex flex-col space-y-1">
+          <motion.span 
+            className={`text-base font-bold leading-tight drop-shadow-sm transition-colors duration-300 ${
+              scrolled ? "text-red-800" : "text-yellow-300"
+            }`}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            Alumni Association
+          </motion.span>
+          <motion.span 
+            className={`text-sm font-semibold leading-tight drop-shadow-sm transition-colors duration-300 ${
+              scrolled ? "text-red-700" : "text-yellow-300"
+            }`}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            Department of Business Administration(AADBA)
+          </motion.span>
+          <motion.span 
+            className={`text-xs leading-tight drop-shadow-sm transition-colors duration-300 ${
+              scrolled ? "text-red-600" : "text-yellow-200"
+            }`}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            BERHAMPUR UNIVERSITY
+          </motion.span>
+        </div>
       </div>
-    </div>
 
-    {/* Center section: Navigation links */}
-    <div className="flex-1 flex justify-center">
-      <ul className="flex space-x-6 ">
-        <li>
-          <Link
-            href="/"
-            className="text-white hover:text-yellow-300 transition"
-          >
-            Home
-          </Link>
-        </li>
-        <li>
-          <Link
-            href="/about"
-            className="text-white hover:text-yellow-300 transition"
-          >
-            About Us
-          </Link>
-        </li>
-        {/* <li>
-          <Link href="/executive-committee" className="text-white hover:text-yellow-300 transition">Executive Committee</Link>
-        </li> */}
-        <li className="relative">
-          <span
-            className="text-white hover:text-yellow-300 transition cursor-pointer"
-            onClick={() => setShowMembersMenu((s) => !s)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                setShowMembersMenu((s) => !s);
-              }
-            }}
-          >
-            Faculty Members
-          </span>
-          {showMembersMenu && (
-            <ul
-              ref={membersMenuRef}
-              className="absolute right-0 mt-2 bg-[#a50303] rounded shadow-lg min-w-max z-60"
+      {/* Center section: Navigation links */}
+      <div className="flex-1 flex justify-center">
+        <ul className="flex space-x-8">
+          <li>
+            <Link
+              href="/"
+              className={`transition-all duration-300 font-medium relative group ${
+                scrolled ? "text-gray-800 hover:text-red-700" : "text-white hover:text-yellow-300"
+              }`}
             >
-              <li>
-                <Link
-                  href="/faculty-members/existing"
-                  className="block px-4 py-2 text-white hover:text-yellow-300"
-                  onClick={() => setShowMembersMenu(false)}
-                >
-                  Existing
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/faculty-members/former"
-                  className="block px-4 py-2 text-white hover:text-yellow-300"
-                  onClick={() => setShowMembersMenu(false)}
-                >
-                  Former
-                </Link>
-              </li>
-            </ul>
-          )}
-        </li>
-        <li className="relative">
-          <span
-            className="text-white hover:text-yellow-300 transition cursor-pointer"
-            onClick={() => setShowEventsMenu((s) => !s)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                setShowEventsMenu((s) => !s);
-              }
-            }}
-          >
-            Events
-          </span>
-          {showEventsMenu && (
-            <ul
-              ref={eventsMenuRef}
-              className="absolute right-0 mt-2 bg-[#a50303] rounded shadow-lg min-w-max z-60"
+              <span className="relative">
+                Home
+                <span className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full ${
+                  scrolled ? "bg-red-700" : "bg-yellow-300"
+                }`}></span>
+              </span>
+            </Link>
+          </li>
+          
+          <li>
+            <Link
+              href="/about"
+              className={`transition-all duration-300 font-medium relative group ${
+                scrolled ? "text-gray-800 hover:text-red-700" : "text-white hover:text-yellow-300"
+              }`}
             >
-              <li>
-                <Link
-                  href="/newsletter"
-                  className="block px-4 py-2 text-white hover:text-yellow-300"
-                  onClick={() => setShowEventsMenu(false)}
-                >
-                  Newsletter
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/events/seminar-conference"
-                  className="block px-4 py-2 text-white hover:text-yellow-300"
-                  onClick={() => setShowEventsMenu(false)}
-                >
-                  Seminar/Conference
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/events/placement-brochure"
-                  className="block px-4 py-2 text-white hover:text-yellow-300"
-                  onClick={() => setShowEventsMenu(false)}
-                >
-                  Placement Brochure
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/events/magazine"
-                  className="block px-4 py-2 text-white hover:text-yellow-300"
-                  onClick={() => setShowEventsMenu(false)}
-                >
-                  Magazine
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/events/annual-events"
-                  className="block px-4 py-2 text-white hover:text-yellow-300"
-                  onClick={() => setShowEventsMenu(false)}
-                >
-                  Annual Events
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/events/other-events"
-                  className="block px-4 py-2 text-white hover:text-yellow-300"
-                  onClick={() => setShowEventsMenu(false)}
-                >
-                  Other Events
-                </Link>
-              </li>
-            </ul>
-          )}
-        </li>
-        <li>
-          <Link
-            href="/visitors"
-            className="text-white hover:text-yellow-300 transition"
-          >
-            Visitors
-          </Link>
-        </li>
-        <li>
-          <Link
-            href="/gallery"
-            className="text-white hover:text-yellow-300 transition"
-          >
-            Gallery
-          </Link>
-        </li>
-        {/* <li>
-          <Link
-            href="/newsletter"
-            className="text-white hover:text-yellow-300 transition"
-          >
-            Newsletter
-          </Link>
-        </li> */}
-        {/* <li>
-          <Link href="/notable-alumni" className="text-white hover:text-yellow-300 transition">Notable Alumni</Link>
-        </li> */}
+              <span className="relative">
+                About Us
+                <span className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full ${
+                  scrolled ? "bg-red-700" : "bg-yellow-300"
+                }`}></span>
+              </span>
+            </Link>
+          </li>
+          
+          {/* Faculty Members Dropdown */}
+          <li className="relative">
+            <motion.span
+              className={`transition-all duration-300 cursor-pointer font-medium relative group flex items-center space-x-1 ${
+                scrolled ? "text-gray-800 hover:text-red-700" : "text-white hover:text-yellow-300"
+              }`}
+              onClick={() => setShowMembersMenu((s) => !s)}
+              role="button"
+              tabIndex={0}
+              whileHover={{ scale: 1.02 }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  setShowMembersMenu((s) => !s);
+                }
+              }}
+            >
+              <span className="relative">
+                Faculty Members
+                <span className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full ${
+                  scrolled ? "bg-red-700" : "bg-yellow-300"
+                }`}></span>
+              </span>
+              <motion.div
+                animate={{ rotate: showMembersMenu ? 180 : 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <ChevronDown size={16} />
+              </motion.div>
+            </motion.span>
+            
+           <AnimatePresence>
+  {showMembersMenu && (
+    <motion.div
+      ref={membersMenuRef}
+      variants={menuVariants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      className="absolute right-0 mt-2 w-56 bg-white backdrop-blur-xl rounded-xl border border-white/20 shadow-xl overflow-hidden"
+    >
+      <div className="p-1.5">
+        <Link
+          href="/faculty-members/existing"
+          className="block px-4 py-2.5 text-gray-700 hover:text-red-600 hover:bg-white/50 rounded-lg transition-all duration-200"
+          onClick={() => setShowMembersMenu(false)}
+        >
+          Existing Members
+        </Link>
+        <Link
+          href="/faculty-members/former"
+          className="block px-4 py-2.5 text-gray-700 hover:text-red-600 hover:bg-white/50 rounded-lg transition-all duration-200"
+          onClick={() => setShowMembersMenu(false)}
+        >
+          Former Members
+        </Link>
+      </div>
+    </motion.div>
+  )}
+</AnimatePresence>
 
-        <li className="relative">
-          <span
-            className="text-white hover:text-yellow-300 transition cursor-pointer"
-            onClick={() => setShowRegisterMenu((prev) => !prev)}
-          >
-            Register
-          </span>
-          {showRegisterMenu && (
-            <ul
-              ref={registerMenuRef}
-              className="absolute right-0 mt-2 bg-[#a50303] rounded shadow-lg min-w-max z-60"
+          </li>
+          
+          {/* Events Dropdown */}
+          <li className="relative">
+            <motion.span
+              className={`transition-all duration-300 cursor-pointer font-medium relative group flex items-center space-x-1 ${
+                scrolled ? "text-gray-800 hover:text-red-700" : "text-white hover:text-yellow-300"
+              }`}
+              onClick={() => setShowEventsMenu((s) => !s)}
+              role="button"
+              tabIndex={0}
+              whileHover={{ scale: 1.02 }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  setShowEventsMenu((s) => !s);
+                }
+              }}
             >
-              <li>
-                <Link
-                  href="/auth/login"
-                  className="block px-4 py-2 text-white hover:text-yellow-300"
-                  onClick={() => setShowRegisterMenu(false)}
-                >
-                  Already Member
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/auth/register"
-                  className="block px-4 py-2 text-white hover:text-yellow-300"
-                  onClick={() => setShowRegisterMenu(false)}
-                >
-                  New Registration
-                </Link>
-              </li>
-            </ul>
-          )}
-        </li>
-      </ul>
-    </div>
+              <span className="relative">
+                Events
+                <span className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full ${
+                  scrolled ? "bg-red-700" : "bg-yellow-300"
+                }`}></span>
+              </span>
+              <motion.div
+                animate={{ rotate: showEventsMenu ? 180 : 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <ChevronDown size={16} />
+              </motion.div>
+            </motion.span>
+            
+           <AnimatePresence>
+  {showEventsMenu && (
+    <motion.div
+      ref={eventsMenuRef}
+      variants={menuVariants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      className="absolute right-0 mt-2 w-56 bg-white/90 backdrop-blur-xl rounded-xl border border-white/20 shadow-xl overflow-hidden"
+    >
+      <div className="p-1.5 space-y-0.5">
+        <Link
+          href="/newsletter"
+          className="block px-4 py-2.5 text-gray-700 hover:text-red-600 hover:bg-white/50 rounded-lg transition-all duration-200"
+          onClick={() => setShowEventsMenu(false)}
+        >
+          Newsletter
+        </Link>
+        <Link
+          href="/events/seminar-conference"
+          className="block px-4 py-2.5 text-gray-700 hover:text-red-600 hover:bg-white/50 rounded-lg transition-all duration-200"
+          onClick={() => setShowEventsMenu(false)}
+        >
+          Seminar/Conference
+        </Link>
+        <Link
+          href="/events/placement-brochure"
+          className="block px-4 py-2.5 text-gray-700 hover:text-red-600 hover:bg-white/50 rounded-lg transition-all duration-200"
+          onClick={() => setShowEventsMenu(false)}
+        >
+          Placement Brochure
+        </Link>
+        <Link
+          href="/events/magazine"
+          className="block px-4 py-2.5 text-gray-700 hover:text-red-600 hover:bg-white/50 rounded-lg transition-all duration-200"
+          onClick={() => setShowEventsMenu(false)}
+        >
+          Magazine
+        </Link>
+        <Link
+          href="/events/annual-events"
+          className="block px-4 py-2.5 text-gray-700 hover:text-red-600 hover:bg-white/50 rounded-lg transition-all duration-200"
+          onClick={() => setShowEventsMenu(false)}
+        >
+          Annual Events
+        </Link>
+        <Link
+          href="/events/other-events"
+          className="block px-4 py-2.5 text-gray-700 hover:text-red-600 hover:bg-white/50 rounded-lg transition-all duration-200"
+          onClick={() => setShowEventsMenu(false)}
+        >
+          Other Events
+        </Link>
+      </div>
+    </motion.div>
+  )}
+</AnimatePresence>
+          </li>
+          
+          <li>
+            <Link
+              href="/visitors"
+              className={`transition-all duration-300 font-medium relative group ${
+                scrolled ? "text-gray-800 hover:text-red-700" : "text-white hover:text-yellow-300"
+              }`}
+            >
+              <span className="relative">
+                Visitors
+                <span className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full ${
+                  scrolled ? "bg-red-700" : "bg-yellow-300"
+                }`}></span>
+              </span>
+            </Link>
+          </li>
+          
+          <li>
+            <Link
+              href="/gallery"
+              className={`transition-all duration-300 font-medium relative group ${
+                scrolled ? "text-gray-800 hover:text-red-700" : "text-white hover:text-yellow-300"
+              }`}
+            >
+              <span className="relative">
+                Gallery
+                <span className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full ${
+                  scrolled ? "bg-red-700" : "bg-yellow-300"
+                }`}></span>
+              </span>
+            </Link>
+          </li>
 
-    {/* Right section: Department text, AADBA Logo */}
-    <div className="flex items-center">
-      <Image
-        src="/logo.jpeg"
-        alt="AADBA Logo"
-        className="h-10 w-auto rounded"
-        width={40}
-        height={40}
-      />
-    </div>
-  </nav>
-);
-}
+          {/* Register Dropdown */}
+          <li className="relative">
+            <motion.span
+              className={`transition-all duration-300 cursor-pointer font-medium relative group flex items-center space-x-1 ${
+                scrolled ? "text-gray-800 hover:text-red-700" : "text-white hover:text-yellow-300"
+              }`}
+              onClick={() => setShowRegisterMenu((prev) => !prev)}
+              whileHover={{ scale: 1.02 }}
+            >
+              <span className="relative">
+                Register
+                <span className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full ${
+                  scrolled ? "bg-red-700" : "bg-yellow-300"
+                }`}></span>
+              </span>
+              <motion.div
+                animate={{ rotate: showRegisterMenu ? 180 : 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <ChevronDown size={16} />
+              </motion.div>
+            </motion.span>
+            
+          <AnimatePresence>
+  {showRegisterMenu && (
+    <motion.div
+      ref={registerMenuRef}
+      variants={menuVariants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      className="absolute right-0 mt-2 w-56 bg-white/90 backdrop-blur-xl rounded-xl border border-white/20 shadow-xl overflow-hidden"
+    >
+      <div className="p-1.5">
+        <Link
+          href="/auth/login"
+          className="block px-4 py-2.5 text-gray-700 hover:text-red-600 hover:bg-white/50 rounded-lg transition-all duration-200"
+          onClick={() => setShowRegisterMenu(false)}
+        >
+          Already Member
+        </Link>
+        <Link
+          href="/auth/register"
+          className="block px-4 py-2.5 text-gray-700 hover:text-red-600 hover:bg-white/50 rounded-lg transition-all duration-200"
+          onClick={() => setShowRegisterMenu(false)}
+        >
+          New Registration
+        </Link>
+      </div>
+    </motion.div>
+  )}
+</AnimatePresence>
+          </li>
+        </ul>
+      </div>
+
+      {/* Right section: AADBA Logo */}
+      <div className="flex items-center">
+        <motion.div
+          whileHover={{ scale: 1.05, rotate: -2 }}
+          whileTap={{ scale: 0.95 }}
+          className="transition-all duration-300"
+        >
+          <Image
+            src="/logo.jpeg"
+            alt="AADBA Logo"
+            className={`h-12 w-auto rounded-lg shadow-lg transition-all duration-300 ${
+              scrolled ? "filter brightness-110" : ""
+            }`}
+            width={48}
+            height={48}
+          />
+        </motion.div>
+      </div>
+    </nav>
+  );
+};
 
 export default Navbar;
