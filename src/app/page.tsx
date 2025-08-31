@@ -12,6 +12,7 @@ import PastEvents from "@/components/minicomponents/home/PastEvents";
 import Footer from "@/components/minicomponents/home/Footer";
 import NotableAlumini from "@/components/minicomponents/home/Notable-Alumini";
 import Gallery from "@/components/minicomponents/home/Gallery";
+import IndustrialTourHome from "@/components/minicomponents/home/Industrial-Tour";
 
 
 export default function HomePage() {
@@ -25,6 +26,7 @@ export default function HomePage() {
       <UpcomingEvent />
       <LatestPublications/> */}
       <PastEvents />
+      <IndustrialTourHome />
       {/* <News /> */}
       <Gallery />
       <NotableAlumini />
