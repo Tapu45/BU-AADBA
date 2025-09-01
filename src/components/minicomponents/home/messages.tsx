@@ -33,8 +33,8 @@ Batch: 1988-90`,
     isIcon: false,
   },
   {
-    name: "Secretary",
-    title: "Alumni Association, Department of Business Administration",
+    name: "Dr. Jitendra kumar sahu",
+    title: "Secretary, Alumni Association, Department of Business Administration",
     intro:
       "Message from the Secretary, Alumni Association, Department of Business Administration",
     message: `It gives me immense pleasure to extend my warm greetings to all members of the Alumni Association of the Department of Business Administration. Our alumni community is a true reflection of the strength and legacy of this department, carrying forward the values of knowledge, leadership, and integrity into diverse fields across the globe.
@@ -50,8 +50,8 @@ With warm regards,
 Secretary
 Alumni Association
 Department of Business Administration`,
-    image: "", // No image
-    isIcon: true, // Use icon
+    image: "/assets/executive/jitendra.jpeg", // No image
+    isIcon: false, // Use icon
   },
   {
     name: "Dr Sunil Kumar Pradhan",
