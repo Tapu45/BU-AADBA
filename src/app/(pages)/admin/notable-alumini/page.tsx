@@ -7,7 +7,7 @@ import { Gift, Plus, Edit, Trash2, X } from "lucide-react";
 type NotableAlumni = {
   id: string;
   name: string;
-  batch: number;
+  batch: string;
   designation: string;
   company: string;
   imageUrl: string;
@@ -17,7 +17,9 @@ function Button({
   children,
   className,
   ...props
-}: React.ButtonHTMLAttributes<HTMLButtonElement> & { children: React.ReactNode }) {
+}: React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  children: React.ReactNode;
+}) {
   return (
     <button
       {...props}
@@ -31,7 +33,9 @@ function Button({
 export default function NotableAlumniPage() {
   const [alumni, setAlumni] = useState<NotableAlumni[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingAlumni, setEditingAlumni] = useState<NotableAlumni | null>(null);
+  const [editingAlumni, setEditingAlumni] = useState<NotableAlumni | null>(
+    null
+  );
   const [formData, setFormData] = useState({
     name: "",
     batch: "",
@@ -40,6 +44,7 @@ export default function NotableAlumniPage() {
     imageUrl: "",
   });
   const [uploading, setUploading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   useEffect(() => {
     fetchAlumni();
@@ -53,7 +58,13 @@ export default function NotableAlumniPage() {
 
   const handleCreate = () => {
     setEditingAlumni(null);
-    setFormData({ name: "", batch: "", designation: "", company: "", imageUrl: "" });
+    setFormData({
+      name: "",
+      batch: "",
+      designation: "",
+      company: "",
+      imageUrl: "",
+    });
     setIsModalOpen(true);
   };
 
@@ -80,27 +91,31 @@ export default function NotableAlumniPage() {
     }
   };
 
-  const handleFileUpload = async (file: File) => {
-    setUploading(true);
-    const formDataUpload = new FormData();
-    formDataUpload.append("file", file);
-    const res = await fetch("/api/upload", {
-      method: "POST",
-      body: formDataUpload,
-    });
-    const data = await res.json();
-    if (data.success) {
-      setFormData((prev) => ({ ...prev, imageUrl: data.data.secure_url }));
-    }
-    setUploading(false);
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setUploading(true);
+
+    let imageUrl = formData.imageUrl;
+
+    // If a new file is selected, upload it first
+    if (selectedFile) {
+      const formDataUpload = new FormData();
+      formDataUpload.append("file", selectedFile);
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formDataUpload,
+      });
+      const data = await res.json();
+      if (data.success) {
+        imageUrl = data.data.secure_url;
+      }
+    }
+
     const method = editingAlumni ? "PUT" : "POST";
     const body = {
       ...formData,
-      batch: parseInt(formData.batch),
+      batch: formData.batch, // Now a string
+      imageUrl,
       ...(editingAlumni && { id: editingAlumni.id }),
     };
     await fetch("/api/admin/notable-alumini", {
@@ -109,6 +124,8 @@ export default function NotableAlumniPage() {
       body: JSON.stringify(body),
     });
     setIsModalOpen(false);
+    setUploading(false);
+    setSelectedFile(null);
     fetchAlumni();
   };
 
@@ -125,7 +142,8 @@ export default function NotableAlumniPage() {
               <Gift className="w-8 h-8" /> Notable Alumni
             </h1>
             <p className="text-lg text-muted-foreground font-medium">
-              Manage notable alumni — add names, batches, designations, companies, and images.
+              Manage notable alumni — add names, batches, designations,
+              companies, and images.
             </p>
           </div>
 
@@ -157,7 +175,10 @@ export default function NotableAlumniPage() {
               <tbody>
                 {alumni.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">
+                    <td
+                      colSpan={7}
+                      className="px-4 py-8 text-center text-muted-foreground"
+                    >
                       No alumni yet.
                     </td>
                   </tr>
@@ -169,7 +190,9 @@ export default function NotableAlumniPage() {
                         <div className="font-medium">{alum.name}</div>
                       </td>
                       <td className="px-4 py-3 align-middle">{alum.batch}</td>
-                      <td className="px-4 py-3 align-middle">{alum.designation}</td>
+                      <td className="px-4 py-3 align-middle">
+                        {alum.designation}
+                      </td>
                       <td className="px-4 py-3 align-middle">{alum.company}</td>
                       <td className="px-4 py-3 align-middle">
                         <div className="w-20 h-20 rounded overflow-hidden border border-[#eaeaea] bg-[#f8f8fa]">
@@ -228,7 +251,8 @@ export default function NotableAlumniPage() {
             >
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold text-[#a50303] flex items-center gap-2">
-                  <Gift className="w-5 h-5" /> {editingAlumni ? "Edit" : "Create"} Alumni
+                  <Gift className="w-5 h-5" />{" "}
+                  {editingAlumni ? "Edit" : "Create"} Alumni
                 </h2>
                 <button
                   aria-label="Close"
@@ -240,62 +264,94 @@ export default function NotableAlumniPage() {
               </div>
 
               <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
-                <label className="text-sm font-medium text-gray-700">Name</label>
+                <label className="text-sm font-medium text-gray-700">
+                  Name
+                </label>
                 <input
                   type="text"
                   required
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
                   className="rounded-lg border border-[#eaeaea] px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-[#a50303] transition"
                 />
 
-                <label className="text-sm font-medium text-gray-700">Batch</label>
+                <label className="text-sm font-medium text-gray-700">
+                  Batch
+                </label>
                 <input
-                  type="number"
+                  type="text"
                   required
                   value={formData.batch}
-                  onChange={(e) => setFormData({ ...formData, batch: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, batch: e.target.value })
+                  }
                   className="rounded-lg border border-[#eaeaea] px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-[#a50303] transition"
                 />
 
-                <label className="text-sm font-medium text-gray-700">Designation</label>
+                <label className="text-sm font-medium text-gray-700">
+                  Designation
+                </label>
                 <input
                   type="text"
                   required
                   value={formData.designation}
-                  onChange={(e) => setFormData({ ...formData, designation: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, designation: e.target.value })
+                  }
                   className="rounded-lg border border-[#eaeaea] px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-[#a50303] transition"
                 />
 
-                <label className="text-sm font-medium text-gray-700">Company</label>
+                <label className="text-sm font-medium text-gray-700">
+                  Company
+                </label>
                 <input
                   type="text"
                   required
                   value={formData.company}
-                  onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, company: e.target.value })
+                  }
                   className="rounded-lg border border-[#eaeaea] px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-[#a50303] transition"
                 />
 
-                <label className="text-sm font-medium text-gray-700">Image</label>
+                <label className="text-sm font-medium text-gray-700">
+                  Image
+                </label>
                 <div className="flex items-center gap-3">
                   <div
                     className="w-full border-2 border-dashed border-[#a50303]/40 rounded-lg p-3 flex items-center gap-3 bg-[#f8eaea] cursor-pointer"
-                    onClick={() => document.getElementById("alumni-image-input")?.click()}
+                    onClick={() =>
+                      document.getElementById("alumni-image-input")?.click()
+                    }
                   >
                     <Plus className="w-5 h-5 text-[#a50303]" />
                     <div className="text-sm text-[#a50303]">
-                      {formData.imageUrl ? "Change image" : "Click to upload image"}
+                      {formData.imageUrl || selectedFile
+                        ? "Change image"
+                        : "Click to upload image"}
                     </div>
                     <input
                       id="alumni-image-input"
                       type="file"
                       accept="image/*"
                       className="hidden"
-                      onChange={(e) => e.target.files && handleFileUpload(e.target.files[0])}
+                      onChange={(e) => {
+                        if (e.target.files) setSelectedFile(e.target.files[0]);
+                      }}
                     />
                   </div>
 
-                  {formData.imageUrl && (
+                  {selectedFile ? (
+                    <div className="w-16 h-16 rounded overflow-hidden border border-[#eaeaea]">
+                      <img
+                        src={URL.createObjectURL(selectedFile)}
+                        alt="preview"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ) : formData.imageUrl ? (
                     <div className="w-16 h-16 rounded overflow-hidden border border-[#eaeaea]">
                       <img
                         src={formData.imageUrl}
@@ -303,7 +359,7 @@ export default function NotableAlumniPage() {
                         className="w-full h-full object-cover"
                       />
                     </div>
-                  )}
+                  ) : null}
                 </div>
 
                 <div className="flex items-center justify-end gap-2 mt-2">
@@ -313,7 +369,13 @@ export default function NotableAlumniPage() {
                     onClick={() => {
                       setIsModalOpen(false);
                       setEditingAlumni(null);
-                      setFormData({ name: "", batch: "", designation: "", company: "", imageUrl: "" });
+                      setFormData({
+                        name: "",
+                        batch: "",
+                        designation: "",
+                        company: "",
+                        imageUrl: "",
+                      });
                     }}
                   >
                     Cancel
@@ -326,13 +388,29 @@ export default function NotableAlumniPage() {
                   >
                     {uploading ? (
                       <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" className="opacity-25" fill="none" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                        <circle
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="3"
+                          className="opacity-25"
+                          fill="none"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                        />
                       </svg>
                     ) : (
                       <Plus className="w-4 h-4" />
                     )}
-                    {uploading ? "Saving..." : editingAlumni ? "Update" : "Create"}
+                    {uploading
+                      ? "Saving..."
+                      : editingAlumni
+                      ? "Update"
+                      : "Create"}
                   </Button>
                 </div>
               </form>

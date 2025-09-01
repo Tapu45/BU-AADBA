@@ -17,7 +17,7 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const { name, batch, designation, company, imageUrl } = await req.json();
-    if (!name || !batch || !designation || !company || !imageUrl) {
+    if (!name || !batch || !designation || !company) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
     const alumni = await prisma.notableAlumni.create({
@@ -25,6 +25,7 @@ export async function POST(req: Request) {
     });
     return NextResponse.json(alumni, { status: 201 });
   } catch (error) {
+     console.error("POST /api/admin/notable-alumini error:", error);
     return NextResponse.json({ error: "Failed to create notable alumni" }, { status: 500 });
   }
 }

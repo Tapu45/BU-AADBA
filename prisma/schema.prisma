@@ -632,7 +632,7 @@ model NewspaperClipping {
 model NotableAlumni {
   id          String   @id @default(cuid())
   name        String
-  batch       Int
+  batch       String
   designation String
   company     String
   imageUrl    String

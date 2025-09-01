@@ -30,7 +30,6 @@ export default function HomePage() {
       {/* <News /> */}
       <Gallery />
       <NotableAlumini />
-
       {/* <Footer/> */}
     </main>
   );
