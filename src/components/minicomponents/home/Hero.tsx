@@ -39,7 +39,9 @@ const Hero: React.FC = () => {
   }, [images.length]);
 
   return (
-    <section className="relative w-full h-screen flex flex-col">
+   // ...existing code...
+<section className="relative w-full h-[70vh] md:h-screen flex flex-col">
+// ...existing code...
       {/* Background Image with Smooth Transition */}
       <div className="absolute inset-0">
         <img
@@ -67,21 +69,21 @@ const Hero: React.FC = () => {
       </div>
 
       {/* Content with Clean Styling */}
-      <div className="relative z-10 flex flex-1 items-end justify-end text-right px-8 pb-12">
+      <div className="relative z-10 flex flex-1 items-end justify-end text-right px-4 sm:px-8 pb-8 sm:pb-12">
         <div className="max-w-2xl">
           {/* Simple Accent Line */}
-          <div className="w-20 h-0.5 bg-yellow-500 mb-6 ml-auto" />
+          <div className="w-16 sm:w-20 h-0.5 bg-yellow-500 mb-4 sm:mb-6 ml-auto" />
           
-          <h1 className="text-5xl md:text-7xl font-extrabold text-white mb-6 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold text-white mb-4 sm:mb-6 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
             AFTER THE HILLTOP
           </h1>
           
           {/* Clean Description */}
-          <div className="space-y-3">
-            <p className="text-lg md:text-2xl text-white mb-3 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+          <div className="space-y-2 sm:space-y-3">
+            <p className="text-base sm:text-lg md:text-2xl text-white mb-2 sm:mb-3 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
               BU alumni are changing the world or, at least, making it a little bit better, one graduate at a time.
             </p>
-            <p className="text-lg md:text-2xl text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+            <p className="text-base sm:text-lg md:text-2xl text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
               Explore how life unfolds beyond the Hilltop.
             </p>
           </div>
@@ -100,8 +102,6 @@ const Hero: React.FC = () => {
           }}
         />
       </div>
-
-   
     </section>
   );
 };

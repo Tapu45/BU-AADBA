@@ -53,7 +53,7 @@ export default function AboutPage() {
       </div>
 
       {/* Optional: Anchor navigation at top */}
-      <nav className="max-w-9xl px-70 mx-auto px-1 py-4 top-0 z-30 flex items-center px-20">
+      <nav className="hidden md:flex max-w-9xl mx-auto px-4 py-4 top-0 z-30 items-center">
         <div
           ref={navRef}
           className="overflow-x-auto no-scrollbar flex-1 mx-1"
