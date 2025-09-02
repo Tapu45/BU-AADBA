@@ -641,3 +641,24 @@ model NotableAlumni {
 
   @@map("notable_alumni")
 }
+
+model GallerySection {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  photos      GalleryPhoto[]
+}
+
+model GalleryPhoto {
+  id          String   @id @default(cuid())
+  sectionId   String
+  section     GallerySection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  imageUrl    String
+  caption     String?
+  uploadedBy  String?
+  uploadDate  DateTime @default(now())
+  isPublic    Boolean  @default(true)
+}

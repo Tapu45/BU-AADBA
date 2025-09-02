@@ -4,86 +4,90 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { UploadCloud, ImagePlus, CheckCircle, X, Trash2 } from "lucide-react";
 
-const fetchAlbums = async () => {
-  const res = await fetch("/api/admin/album/");
+const fetchSections = async () => {
+  const res = await fetch("/api/admin/gallery");
   const data = await res.json();
-  return data.albums || [];
+  return Array.isArray(data) ? data : [];
 };
 
 const GalleryAdminPage = () => {
-  const [albums, setAlbums] = useState<
-    { id: string; name: string; description?: string; photos: { id: string; imageUrl: string }[] }[]
+  const [sections, setSections] = useState<
+    { id: string; title: string; description?: string; photos: { id: string; imageUrl: string; caption?: string }[] }[]
   >([]);
-  const [showAlbumModal, setShowAlbumModal] = useState(false);
-  const [albumName, setAlbumName] = useState("");
-  const [albumDesc, setAlbumDesc] = useState("");
+  const [showSectionModal, setShowSectionModal] = useState(false);
+  const [sectionTitle, setSectionTitle] = useState("");
+  const [sectionDesc, setSectionDesc] = useState("");
   const [loading, setLoading] = useState(false);
-  const [selectedAlbumId, setSelectedAlbumId] = useState<string | null>(null);
+  const [selectedSectionId, setSelectedSectionId] = useState<string | null>(null);
   const [photos, setPhotos] = useState<File[]>([]);
   const [uploadingPhotos, setUploadingPhotos] = useState(false);
 
   useEffect(() => {
     (async () => {
-      setAlbums(await fetchAlbums());
+      setSections(await fetchSections());
     })();
   }, []);
 
-  const handleCreateAlbum = async (e: React.FormEvent) => {
+  const handleCreateSection = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await fetch("/api/admin/album/", {
+      const res = await fetch("/api/admin/gallery", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: albumName, description: albumDesc }),
+        body: JSON.stringify({ type: "section", title: sectionTitle, description: sectionDesc }),
       });
       const data = await res.json();
-      setAlbums(await fetchAlbums());
-      setShowAlbumModal(false);
-      setAlbumName("");
-      setAlbumDesc("");
+      setSections(await fetchSections());
+      setShowSectionModal(false);
+      setSectionTitle("");
+      setSectionDesc("");
     } catch {
-      alert("Error creating album");
+      alert("Error creating section");
     }
     setLoading(false);
   };
 
   const handlePhotoUpload = async () => {
-    if (!selectedAlbumId || photos.length === 0) return;
+    if (!selectedSectionId || photos.length === 0) return;
     setUploadingPhotos(true);
     for (const photo of photos) {
       const formData = new FormData();
       formData.append("file", photo);
-      const uploadRes = await fetch("/api/upload/", {
+      const uploadRes = await fetch("/api/upload", {
         method: "POST",
         body: formData,
       });
       const uploadData = await uploadRes.json();
       const photoUrl = uploadData.data.secure_url;
-      await fetch(`/api/admin/album/${selectedAlbumId}/photo/`, {
+      await fetch("/api/admin/gallery", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ imageUrl: photoUrl }),
+        body: JSON.stringify({ type: "photo", sectionId: selectedSectionId, imageUrl: photoUrl }),
       });
     }
-    setAlbums(await fetchAlbums());
+    setSections(await fetchSections());
     setPhotos([]);
     setUploadingPhotos(false);
   };
 
-  const handleDeleteAlbum = async (albumId: string) => {
-    if (!confirm("Delete this album?")) return;
-    await fetch(`/api/admin/album/${albumId}/`, {
+  const handleDeleteSection = async (sectionId: string) => {
+    if (!confirm("Delete this section?")) return;
+    await fetch("/api/admin/gallery", {
       method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ type: "section", sectionId }),
     });
-    setAlbums(await fetchAlbums());
+    setSections(await fetchSections());
   };
 
-  const handleDeletePhoto = async (albumId: string, photoId: string) => {
-    await fetch(`/api/admin/album/${albumId}/photo/${photoId}/`, {
+  const handleDeletePhoto = async (photoId: string) => {
+    await fetch("/api/admin/gallery", {
       method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ type: "photo", photoId }),
     });
-    setAlbums(await fetchAlbums());
+    setSections(await fetchSections());
   };
 
   return (
@@ -96,22 +100,22 @@ const GalleryAdminPage = () => {
       >
         <header className="mb-10 flex flex-col gap-2 items-center">
           <h1 className="text-4xl font-extrabold text-[#a50303] flex items-center gap-2">
-            <ImagePlus className="w-8 h-8" /> Gallery Albums
+            <ImagePlus className="w-8 h-8" /> Gallery Sections
           </h1>
           <p className="text-lg text-muted-foreground font-medium">
-            Manage your albums and photos
+            Manage your sections and photos
           </p>
           <Button
             className="mt-4 rounded-full font-semibold bg-[#a50303] hover:bg-[#c70c0c] shadow text-white px-6 py-3 flex items-center gap-2"
-            onClick={() => setShowAlbumModal(true)}
-            aria-label="Create Album"
+            onClick={() => setShowSectionModal(true)}
+            aria-label="Create Section"
           >
-            <UploadCloud className="w-5 h-5" /> Create Album
+            <UploadCloud className="w-5 h-5" /> Create Section
           </Button>
         </header>
 
         <AnimatePresence>
-          {showAlbumModal && (
+          {showSectionModal && (
             <motion.div
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -128,40 +132,40 @@ const GalleryAdminPage = () => {
               >
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="text-xl font-bold text-[#a50303] flex items-center gap-2">
-                    <ImagePlus className="w-6 h-6" /> New Album
+                    <ImagePlus className="w-6 h-6" /> New Section
                   </h2>
                   <button
                     aria-label="Close"
                     className="rounded-full p-2 hover:bg-[#f8eaea] transition"
-                    onClick={() => setShowAlbumModal(false)}
+                    onClick={() => setShowSectionModal(false)}
                   >
                     <X className="w-5 h-5" />
                   </button>
                 </div>
-                <form onSubmit={handleCreateAlbum} className="flex flex-col gap-4">
+                <form onSubmit={handleCreateSection} className="flex flex-col gap-4">
                   <input
                     type="text"
-                    placeholder="Album Name"
-                    value={albumName}
-                    onChange={(e) => setAlbumName(e.target.value)}
+                    placeholder="Section Title"
+                    value={sectionTitle}
+                    onChange={(e) => setSectionTitle(e.target.value)}
                     required
                     className="rounded-lg border border-[#eaeaea] px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-[#a50303] transition"
-                    aria-label="Album Name"
+                    aria-label="Section Title"
                   />
                   <textarea
-                    placeholder="Album Description"
-                    value={albumDesc}
-                    onChange={(e) => setAlbumDesc(e.target.value)}
+                    placeholder="Section Description"
+                    value={sectionDesc}
+                    onChange={(e) => setSectionDesc(e.target.value)}
                     className="rounded-lg border border-[#eaeaea] px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-[#a50303] transition"
-                    aria-label="Album Description"
+                    aria-label="Section Description"
                   />
                   <Button
                     type="submit"
                     className="rounded-full font-semibold bg-[#a50303] hover:bg-[#c70c0c] transition-colors flex items-center justify-center gap-2 text-white"
                     disabled={loading}
-                    aria-label="Create Album"
+                    aria-label="Create Section"
                   >
-                    <UploadCloud className="w-5 h-5" /> Create Album
+                    <UploadCloud className="w-5 h-5" /> Create Section
                   </Button>
                 </form>
               </motion.div>
@@ -170,15 +174,15 @@ const GalleryAdminPage = () => {
         </AnimatePresence>
 
         <section className="mt-8">
-          {albums.length === 0 ? (
+          {sections.length === 0 ? (
             <div className="py-12 text-center text-muted-foreground text-lg">
-              No albums yet.
+              No sections yet.
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {albums.map((album) => (
+              {sections.map((section) => (
                 <motion.div
-                  key={album.id}
+                  key={section.id}
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3 }}
@@ -186,13 +190,13 @@ const GalleryAdminPage = () => {
                 >
                   <div className="flex items-center justify-between mb-2">
                     <div>
-                      <span className="font-semibold text-lg text-[#a50303]">{album.name}</span>
-                      <div className="text-sm text-muted-foreground">{album.description}</div>
+                      <span className="font-semibold text-lg text-[#a50303]">{section.title}</span>
+                      <div className="text-sm text-muted-foreground">{section.description}</div>
                     </div>
                     <Button
                       className="rounded-full border border-[#a50303] text-[#a50303] px-3 py-1 hover:bg-[#f8eaea] transition-colors"
-                      aria-label="Delete Album"
-                      onClick={() => handleDeleteAlbum(album.id)}
+                      aria-label="Delete Section"
+                      onClick={() => handleDeleteSection(section.id)}
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
@@ -204,7 +208,7 @@ const GalleryAdminPage = () => {
                         multiple
                         accept="image/*"
                         onChange={(e) => {
-                          setSelectedAlbumId(album.id);
+                          setSelectedSectionId(section.id);
                           setPhotos(Array.from(e.target.files || []));
                         }}
                         className="rounded-lg border border-[#eaeaea] px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-[#a50303] transition"
@@ -213,19 +217,19 @@ const GalleryAdminPage = () => {
                       />
                       <Button
                         type="button"
-                        className={`rounded-full font-semibold bg-[#a50303] hover:bg-[#c70c0c] transition-colors flex items-center gap-2 text-white ${photos.length === 0 || selectedAlbumId !== album.id ? "opacity-60 cursor-not-allowed" : ""}`}
+                        className={`rounded-full font-semibold bg-[#a50303] hover:bg-[#c70c0c] transition-colors flex items-center gap-2 text-white ${photos.length === 0 || selectedSectionId !== section.id ? "opacity-60 cursor-not-allowed" : ""}`}
                         onClick={handlePhotoUpload}
-                        disabled={uploadingPhotos || photos.length === 0 || selectedAlbumId !== album.id}
+                        disabled={uploadingPhotos || photos.length === 0 || selectedSectionId !== section.id}
                         aria-label="Upload Photos"
                       >
                         <UploadCloud className="w-5 h-5" /> Upload
                       </Button>
                     </div>
                     <div className="flex flex-wrap gap-4 mt-4">
-                      {album.photos.length === 0 ? (
+                      {section.photos.length === 0 ? (
                         <div className="text-muted-foreground text-sm">No photos yet.</div>
                       ) : (
-                        album.photos.map((photo) => (
+                        section.photos.map((photo) => (
                           <motion.div
                             key={photo.id}
                             initial={{ opacity: 0, scale: 0.95 }}
@@ -234,13 +238,13 @@ const GalleryAdminPage = () => {
                           >
                             <img
                               src={photo.imageUrl}
-                              alt="Uploaded"
+                              alt={photo.caption || "Uploaded"}
                               className="w-24 h-24 object-cover rounded-xl border border-[#eaeaea] shadow"
                             />
                             <button
                               aria-label="Delete Photo"
                               className="absolute top-1 right-1 bg-white/80 rounded-full p-1 opacity-0 group-hover:opacity-100 transition"
-                              onClick={() => handleDeletePhoto(album.id, photo.id)}
+                              onClick={() => handleDeletePhoto(photo.id)}
                             >
                               <Trash2 className="w-4 h-4 text-[#a50303]" />
                             </button>
