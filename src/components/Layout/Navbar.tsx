@@ -333,11 +333,11 @@ const Navbar: React.FC = () => {
                         Magazine
                       </Link>
                       <Link
-                        href="/events/annual-events"
+                        href="/industrial-tours"
                         className="block px-4 py-2.5 text-gray-700 hover:text-red-600 hover:bg-white/50 rounded-lg transition-all duration-200"
                         onClick={() => setShowEventsMenu(false)}
                       >
-                        Annual Events
+                        Industrial Tour
                       </Link>
                       <Link
                         href="/events/other-events"

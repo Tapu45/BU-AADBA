@@ -187,14 +187,14 @@ const QuickLinks: React.FC = () => {
               {clippings.length > 0 ? (
                 <div className="relative">
                   <div className="relative overflow-hidden rounded-xl">
-                    <img
-                      src={clippings[currentIndex].imageUrl}
-                      alt={clippings[currentIndex].title}
-                      className="w-full h-64 md:h-80 object-cover cursor-pointer hover:scale-105 transition-transform duration-500"
-                      onClick={() =>
-                        openModal(clippings[currentIndex].imageUrl)
-                      }
-                    />
+                  <img
+  src={clippings[currentIndex].imageUrl}
+  alt={clippings[currentIndex].title}
+  className="w-full h-64 md:h-80 object-contain cursor-pointer hover:scale-105 transition-transform duration-500" // <-- Changed from object-cover to object-contain
+  onClick={() =>
+    openModal(clippings[currentIndex].imageUrl)
+  }
+/>
 
                     {/* Overlay with title */}
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4 md:p-6">

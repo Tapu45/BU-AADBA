@@ -1,18 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import {
-  Users,
-  BookOpen,
-  Target,
-  ShieldCheck,
-  Crown,
-} from "lucide-react";
+import { Users, BookOpen, Target, ShieldCheck, Crown } from "lucide-react";
 import { useRef, useState } from "react";
-
-
-
-
 
 export default function AboutPage() {
   // For anchor navigation highlight (optional)
@@ -28,10 +18,8 @@ export default function AboutPage() {
       label: "Certificate of Registration",
       icon: ShieldCheck,
     },
-    { id: "constitution", label: "AABU Constitution 2025", icon: BookOpen }
+    { id: "constitution", label: "AABU Constitution 2025", icon: BookOpen },
   ];
-
-  
 
   return (
     <div className="bg-white min-h-screen text-gray-800 py-19">
@@ -97,7 +85,7 @@ export default function AboutPage() {
         {/* Main content area - all sections in scroll */}
         <div className="max-w-7xl mx-auto px-4 py-8 space-y-10">
           {/* VISION */}
-           <section id="vision">
+          <section id="vision">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -113,20 +101,29 @@ export default function AboutPage() {
                 <div className="flex-1 h-1 bg-gradient-to-r from-[#800000] via-[#800000]/30 to-transparent rounded-full ml-3" />
               </div>
               <div className="relative rounded-xl p-6 z-10">
-                <h3 className="text-2xl font-bold text-[#800000] mb-2">Vision</h3>
+                <h3 className="text-2xl font-bold text-[#800000] mb-2">
+                  Vision
+                </h3>
                 <p className="text-gray-800 text-base leading-relaxed mb-6">
-                  The Department aspires to develop and project our university's MBA programme as a distinct one based on academic excellence and thought leadership, which would promote the cult of entrepreneurship and innovative leaders.
+                  The Department aspires to develop and project our university's
+                  MBA programme as a distinct one based on academic excellence
+                  and thought leadership, which would promote the cult of
+                  entrepreneurship and innovative leaders.
                 </p>
-                <h3 className="text-2xl font-bold text-[#800000] mb-2">Mission</h3>
+                <h3 className="text-2xl font-bold text-[#800000] mb-2">
+                  Mission
+                </h3>
                 <ul className="list-disc space-y-3 ml-8 text-gray-800 text-base leading-relaxed">
                   <li>
-                    To produce tech-savvy entrepreneur management graduates to meet the changing requirements of the industries.
+                    To produce tech-savvy entrepreneur management graduates to
+                    meet the changing requirements of the industries.
                   </li>
                   <li>
                     To foster research in the paired disciplines of management.
                   </li>
                   <li>
-                    To promote continuous learning through an effective industry-academia interface.
+                    To promote continuous learning through an effective
+                    industry-academia interface.
                   </li>
                 </ul>
               </div>
@@ -251,9 +248,9 @@ export default function AboutPage() {
                   },
                   {
                     role: "Treasurer",
-                    name: "Head/Coordinator of the Department of Business Administration",
+                    name: "Dr. Sunil Pradhan",
                     years: "",
-                    img: "https://randomuser.me/api/portraits/men/36.jpg",
+                    img: "/assets/leaders/image copy.png",
                   },
                 ].map((member) => (
                   <div
@@ -283,9 +280,9 @@ export default function AboutPage() {
               <div className="grid md:grid-cols-2 gap-6">
                 {[
                   {
-                    name: "Faculty-in-Charge, Placement Cell of the Department",
-                    img: "https://randomuser.me/api/portraits/men/37.jpg",
-                  },
+  name: "Dr. Suman Praharaj, Faculty-in-Charge, Placement Cell of the Department",
+  img: "/assets/executive/Suman.jpeg", // <-- Add your photo path here
+},
                   {
                     name: "Dr. Sharada Prasad Sahoo, Faculty Member",
                     img: "/assets/executive/Dr. Sarada.jpeg",
@@ -395,7 +392,6 @@ export default function AboutPage() {
               </a>
             </motion.div>
           </section>
-
         </div>
       </div>
     </div>
