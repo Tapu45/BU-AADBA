@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { UploadCloud, ImagePlus, CheckCircle, X, Trash2 } from "lucide-react";
+import { UploadCloud, ImagePlus, CheckCircle, X, Trash2, Loader2 } from "lucide-react";
 
 const fetchSections = async () => {
   const res = await fetch("/api/admin/gallery");
@@ -12,36 +12,76 @@ const fetchSections = async () => {
 
 const GalleryAdminPage = () => {
   const [sections, setSections] = useState<
-    { id: string; title: string; description?: string; photos: { id: string; imageUrl: string; caption?: string }[] }[]
+    {
+      id: string;
+      title: string;
+      description?: string;
+      photos: { id: string; imageUrl: string; caption?: string }[];
+    }[]
   >([]);
   const [showSectionModal, setShowSectionModal] = useState(false);
   const [sectionTitle, setSectionTitle] = useState("");
   const [sectionDesc, setSectionDesc] = useState("");
   const [loading, setLoading] = useState(false);
-  const [selectedSectionId, setSelectedSectionId] = useState<string | null>(null);
+  const [selectedSectionId, setSelectedSectionId] = useState<string | null>(
+    null
+  );
   const [photos, setPhotos] = useState<File[]>([]);
   const [uploadingPhotos, setUploadingPhotos] = useState(false);
+  const [modalPhotos, setModalPhotos] = useState<File[]>([]); // Photos for the modal
 
   useEffect(() => {
     (async () => {
       setSections(await fetchSections());
     })();
   }, []);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleCreateSection = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
+      // Create the section
       const res = await fetch("/api/admin/gallery", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "section", title: sectionTitle, description: sectionDesc }),
+        body: JSON.stringify({
+          type: "section",
+          title: sectionTitle,
+          description: sectionDesc,
+        }),
       });
       const data = await res.json();
+      const newSectionId = data.id;
+
+      // Upload photos to the new section
+      if (modalPhotos.length > 0) {
+        for (const photo of modalPhotos) {
+          const formData = new FormData();
+          formData.append("file", photo);
+          const uploadRes = await fetch("/api/upload", {
+            method: "POST",
+            body: formData,
+          });
+          const uploadData = await uploadRes.json();
+          const photoUrl = uploadData.data.secure_url;
+          await fetch("/api/admin/gallery", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              type: "photo",
+              sectionId: newSectionId,
+              imageUrl: photoUrl,
+            }),
+          });
+        }
+      }
+
       setSections(await fetchSections());
       setShowSectionModal(false);
       setSectionTitle("");
       setSectionDesc("");
+      setModalPhotos([]);
     } catch {
       alert("Error creating section");
     }
@@ -63,7 +103,11 @@ const GalleryAdminPage = () => {
       await fetch("/api/admin/gallery", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "photo", sectionId: selectedSectionId, imageUrl: photoUrl }),
+        body: JSON.stringify({
+          type: "photo",
+          sectionId: selectedSectionId,
+          imageUrl: photoUrl,
+        }),
       });
     }
     setSections(await fetchSections());
@@ -88,6 +132,10 @@ const GalleryAdminPage = () => {
       body: JSON.stringify({ type: "photo", photoId }),
     });
     setSections(await fetchSections());
+  };
+
+  const removeModalPhoto = (index: number) => {
+    setModalPhotos(modalPhotos.filter((_, i) => i !== index));
   };
 
   return (
@@ -128,7 +176,7 @@ const GalleryAdminPage = () => {
                 initial={{ y: 32, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: 32, opacity: 0 }}
-                className="bg-white rounded-2xl shadow-2xl border border-[#eaeaea] p-8 w-full max-w-md"
+                className="bg-white rounded-2xl shadow-2xl border border-[#eaeaea] p-8 w-full max-w-md max-h-[80vh] overflow-y-auto"
               >
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="text-xl font-bold text-[#a50303] flex items-center gap-2">
@@ -142,7 +190,10 @@ const GalleryAdminPage = () => {
                     <X className="w-5 h-5" />
                   </button>
                 </div>
-                <form onSubmit={handleCreateSection} className="flex flex-col gap-4">
+                <form
+                  onSubmit={handleCreateSection}
+                  className="flex flex-col gap-4"
+                >
                   <input
                     type="text"
                     placeholder="Section Title"
@@ -159,14 +210,61 @@ const GalleryAdminPage = () => {
                     className="rounded-lg border border-[#eaeaea] px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-[#a50303] transition"
                     aria-label="Section Description"
                   />
-                  <Button
-                    type="submit"
-                    className="rounded-full font-semibold bg-[#a50303] hover:bg-[#c70c0c] transition-colors flex items-center justify-center gap-2 text-white"
-                    disabled={loading}
-                    aria-label="Create Section"
-                  >
-                    <UploadCloud className="w-5 h-5" /> Create Section
-                  </Button>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Upload Photos{" "}
+                    </label>
+                    <input
+                      ref={fileInputRef} // Add this ref
+                      type="file"
+                      multiple
+                      accept="image/*"
+                      onChange={(e) => {
+                        setModalPhotos(Array.from(e.target.files || []));
+                        if (fileInputRef.current)
+                          fileInputRef.current.value = ""; // Clear the input after selection
+                      }}
+                      className="rounded-lg border border-[#eaeaea] px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-[#a50303] transition w-full"
+                      aria-label="Select Photos"
+                    />
+                    {modalPhotos.length > 0 && (
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        {modalPhotos.map((photo, index) => (
+                          <div key={index} className="relative">
+                            <img
+                              src={URL.createObjectURL(photo)}
+                              alt={`Preview ${index + 1}`}
+                              className="w-16 h-16 object-cover rounded-lg border border-[#eaeaea]"
+                            />
+                            <button
+                              type="button"
+                              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 text-xs"
+                              onClick={() => removeModalPhoto(index)}
+                              aria-label="Remove Photo"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                <Button
+  type="submit"
+  className="rounded-full font-semibold bg-[#a50303] hover:bg-[#c70c0c] transition-colors flex items-center justify-center gap-2 text-white"
+  disabled={loading}
+  aria-label="Create Section"
+>
+  {loading ? (
+    <>
+      <Loader2 className="w-5 h-5 animate-spin" /> Creating...
+    </>
+  ) : (
+    <>
+      <UploadCloud className="w-5 h-5" /> Create Section
+    </>
+  )}
+</Button>
                 </form>
               </motion.div>
             </motion.div>
@@ -190,8 +288,12 @@ const GalleryAdminPage = () => {
                 >
                   <div className="flex items-center justify-between mb-2">
                     <div>
-                      <span className="font-semibold text-lg text-[#a50303]">{section.title}</span>
-                      <div className="text-sm text-muted-foreground">{section.description}</div>
+                      <span className="font-semibold text-lg text-[#a50303]">
+                        {section.title}
+                      </span>
+                      <div className="text-sm text-muted-foreground">
+                        {section.description}
+                      </div>
                     </div>
                     <Button
                       className="rounded-full border border-[#a50303] text-[#a50303] px-3 py-1 hover:bg-[#f8eaea] transition-colors"
@@ -217,9 +319,18 @@ const GalleryAdminPage = () => {
                       />
                       <Button
                         type="button"
-                        className={`rounded-full font-semibold bg-[#a50303] hover:bg-[#c70c0c] transition-colors flex items-center gap-2 text-white ${photos.length === 0 || selectedSectionId !== section.id ? "opacity-60 cursor-not-allowed" : ""}`}
+                        className={`rounded-full font-semibold bg-[#a50303] hover:bg-[#c70c0c] transition-colors flex items-center gap-2 text-white ${
+                          photos.length === 0 ||
+                          selectedSectionId !== section.id
+                            ? "opacity-60 cursor-not-allowed"
+                            : ""
+                        }`}
                         onClick={handlePhotoUpload}
-                        disabled={uploadingPhotos || photos.length === 0 || selectedSectionId !== section.id}
+                        disabled={
+                          uploadingPhotos ||
+                          photos.length === 0 ||
+                          selectedSectionId !== section.id
+                        }
                         aria-label="Upload Photos"
                       >
                         <UploadCloud className="w-5 h-5" /> Upload
@@ -227,7 +338,9 @@ const GalleryAdminPage = () => {
                     </div>
                     <div className="flex flex-wrap gap-4 mt-4">
                       {section.photos.length === 0 ? (
-                        <div className="text-muted-foreground text-sm">No photos yet.</div>
+                        <div className="text-muted-foreground text-sm">
+                          No photos yet.
+                        </div>
                       ) : (
                         section.photos.map((photo) => (
                           <motion.div
@@ -267,7 +380,9 @@ function Button({
   children,
   className,
   ...props
-}: React.ButtonHTMLAttributes<HTMLButtonElement> & { children: React.ReactNode }) {
+}: React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  children: React.ReactNode;
+}) {
   return (
     <button
       {...props}

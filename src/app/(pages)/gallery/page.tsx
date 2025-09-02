@@ -10,51 +10,41 @@ type Photo = {
   caption?: string;
   uploadDate: string;
   uploadedBy?: string;
-  albumTitle?: string;
 };
 
-type Album = {
+type Section = {
   id: string;
   title: string;
   description?: string;
-  albumDate: string;
-  coverImage?: string;
   photos: Photo[];
 };
 
-const fetchGallery = async (): Promise<Album[]> => {
+const fetchGallery = async (): Promise<Section[]> => {
   const res = await fetch("/api/admin/gallery", { cache: "no-store" });
   if (!res.ok) return [];
   return await res.json();
 };
 
 export default function GalleryPage() {
-  const [photos, setPhotos] = useState<Photo[]>([]);
+  const [sections, setSections] = useState<Section[]>([]);
   const [loading, setLoading] = useState(true);
-
-  // Modal state
   const [modalIdx, setModalIdx] = useState<number | null>(null);
-
-  // Focus trap for modal accessibility
+  const [modalSectionIdx, setModalSectionIdx] = useState<number | null>(null);
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     (async () => {
       setLoading(true);
-      const albums = await fetchGallery();
-      // Flatten all photos from all albums
-      const allPhotos = albums.flatMap((album) =>
-        album.photos.map((photo) => ({
-          ...photo,
-          albumTitle: album.title,
-        }))
-      );
-      setPhotos(allPhotos);
+      const data = await fetchGallery();
+      setSections(data);
       setLoading(false);
     })();
   }, []);
 
-  // Keyboard navigation for modal
+  const allPhotos = sections.flatMap((section, sectionIdx) =>
+    section.photos.map((photo) => ({ ...photo, sectionTitle: section.title, sectionIdx }))
+  );
+
   useEffect(() => {
     if (modalIdx === null) return;
     const handleKey = (e: KeyboardEvent) => {
@@ -66,8 +56,15 @@ export default function GalleryPage() {
     return () => window.removeEventListener("keydown", handleKey);
   });
 
-  const openModal = (idx: number) => setModalIdx(idx);
-  const closeModal = () => setModalIdx(null);
+  const openModal = (sectionIdx: number, photoIdx: number) => {
+    const globalIdx = sections.slice(0, sectionIdx).reduce((acc, s) => acc + s.photos.length, 0) + photoIdx;
+    setModalIdx(globalIdx);
+    setModalSectionIdx(sectionIdx);
+  };
+  const closeModal = () => {
+    setModalIdx(null);
+    setModalSectionIdx(null);
+  };
 
   const prevPhoto = () => {
     if (modalIdx === null) return;
@@ -76,10 +73,9 @@ export default function GalleryPage() {
 
   const nextPhoto = () => {
     if (modalIdx === null) return;
-    if (modalIdx < photos.length - 1) setModalIdx(modalIdx + 1);
+    if (modalIdx < allPhotos.length - 1) setModalIdx(modalIdx + 1);
   };
 
-  // Focus trap for modal
   useEffect(() => {
     if (modalIdx !== null && modalRef.current) {
       modalRef.current.focus();
@@ -87,28 +83,25 @@ export default function GalleryPage() {
   }, [modalIdx]);
 
   return (
-    <main className="min-h-screen bg-[#f8f8f8] px-6 py-24">
-      <div className="max-w-7xl mx-auto">
+    <main className="min-h-screen bg-[#f8f8f8] px-4 py-16">
+      <div className="max-w-6xl mx-auto">
         <motion.header
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="mb-12 text-center"
+          transition={{ duration: 0.5 }}
+          className="mb-8 text-center"
         >
-          <h1 className="text-4xl md:text-5xl font-bold text-[#a50303] tracking-tight">
-            <span className="relative inline-block">
-              Alumni Gallery
-              <span className="absolute bottom-1 left-0 w-full h-[3px] bg-[#a50303] opacity-20"></span>
-            </span>
+          <h1 className="text-3xl md:text-4xl font-bold text-[#a50303]">
+            Alumni Gallery
           </h1>
-          <p className="text-lg text-zinc-600 mt-4 max-w-2xl mx-auto">
+          <p className="text-base text-zinc-600 mt-2 max-w-xl mx-auto">
             Explore memorable moments from our alumni community
           </p>
         </motion.header>
 
         {loading ? (
-          <div className="flex justify-center items-center py-32">
-            <div className="relative h-12 w-12">
+          <div className="flex justify-center items-center py-24">
+            <div className="relative h-10 w-10">
               <div className="absolute inset-0 border-4 border-[#a50303]/20 rounded-full"></div>
               <motion.div 
                 className="absolute inset-0 border-4 border-transparent border-t-[#a50303] rounded-full"
@@ -117,51 +110,69 @@ export default function GalleryPage() {
               ></motion.div>
             </div>
           </div>
-        ) : photos.length === 0 ? (
-          <div className="py-32 text-center text-zinc-500 text-lg">
-            No photos found.
+        ) : sections.length === 0 ? (
+          <div className="py-24 text-center text-zinc-500 text-base">
+            No sections found.
           </div>
         ) : (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6 }}
-            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5"
-          >
-            {photos.map((photo, idx) => (
-              <motion.div
-                key={photo.id}
-                initial={{ opacity: 0, y: 20 }}
+          <div className="space-y-12">
+            {sections.map((section, sectionIdx) => (
+              <motion.section
+                key={section.id}
+                initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: idx * 0.05 }}
-                className="aspect-[4/5] relative"
+                transition={{ duration: 0.4, delay: sectionIdx * 0.05 }}
+                className="space-y-4"
               >
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full h-full focus:outline-none group"
-                  onClick={() => openModal(idx)}
-                  aria-label={`View photo: ${photo.caption || "Alumni Photo"}`}
-                >
-                  <div className="absolute inset-0 bg-black/5 rounded-lg transform group-hover:bg-black/0 transition-all duration-300"></div>
-                  <img
-                    src={photo.imageUrl}
-                    alt={photo.caption || "Alumni Photo"}
-                    className="w-full h-full object-cover rounded-lg shadow-md"
-                    loading="lazy"
-                    style={{
-                      boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)",
-                    }}
-                  />
-                  <div className="absolute inset-0 rounded-lg ring-1 ring-black/5 transform group-hover:ring-[#a50303]/40 transition-all duration-300"></div>
-                  <div className="absolute bottom-0 left-0 right-0 h-1/4 bg-gradient-to-t from-black/30 to-transparent rounded-b-lg opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
-                </motion.button>
-              </motion.div>
+                <div className="text-center">
+                  <h2 className="text-xl md:text-2xl font-bold text-[#a50303]">{section.title}</h2>
+                  {section.description && (
+                    <p className="text-zinc-600 mt-1 text-sm">{section.description}</p>
+                  )}
+                </div>
+                {section.photos.length === 0 ? (
+                  <div className="text-center text-zinc-500 text-sm">No photos in this section.</div>
+                ) : (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                    className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+                  >
+                    {section.photos.map((photo, photoIdx) => (
+                      <motion.div
+                        key={photo.id}
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.4, delay: photoIdx * 0.03 }}
+                        className="aspect-[3/4] relative"
+                      >
+                        <motion.button
+                          whileHover={{ scale: 1.01 }}
+                          whileTap={{ scale: 0.99 }}
+                          className="w-full h-full focus:outline-none group"
+                          onClick={() => openModal(sectionIdx, photoIdx)}
+                          aria-label={`View photo: ${photo.caption || "Alumni Photo"}`}
+                        >
+                          <div className="absolute inset-0 bg-black/5 rounded-md transform group-hover:bg-black/0 transition-all duration-300"></div>
+                          <img
+                            src={photo.imageUrl}
+                            alt={photo.caption || "Alumni Photo"}
+                            className="w-full h-full object-cover rounded-md shadow-sm"
+                            loading="lazy"
+                          />
+                          <div className="absolute inset-0 rounded-md ring-1 ring-black/5 transform group-hover:ring-[#a50303]/30 transition-all duration-300"></div>
+                          <div className="absolute bottom-0 left-0 right-0 h-1/5 bg-gradient-to-t from-black/20 to-transparent rounded-b-md opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+                        </motion.button>
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                )}
+              </motion.section>
             ))}
-          </motion.div>
+          </div>
         )}
 
-        {/* Photo Modal */}
         <AnimatePresence>
           {modalIdx !== null && (
             <motion.div
@@ -184,7 +195,7 @@ export default function GalleryPage() {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.95, opacity: 0 }}
                 transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                className="relative p-6 max-w-7xl w-full max-h-[90vh] flex flex-col items-center"
+                className="relative p-4 max-w-6xl w-full max-h-[85vh] flex flex-col items-center"
                 onClick={(e) => e.stopPropagation()}
                 tabIndex={0}
                 aria-label="Photo viewer"
@@ -194,48 +205,51 @@ export default function GalleryPage() {
                   onClick={closeModal}
                   aria-label="Close photo viewer"
                 >
-                  <X size={24} />
+                  <X size={20} />
                 </button>
                 
                 <div className="flex items-center justify-between w-full h-full">
                   <button
-                    className="text-white hover:text-[#a50303] bg-black/30 hover:bg-white/90 rounded-full p-3 focus:outline-none focus:ring-2 focus:ring-white/50 disabled:opacity-30 transition-all duration-200 transform hover:scale-110"
+                    className="text-white hover:text-[#a50303] bg-black/30 hover:bg-white/90 rounded-full p-2 focus:outline-none focus:ring-2 focus:ring-white/50 disabled:opacity-30 transition-all duration-200 transform hover:scale-105"
                     onClick={prevPhoto}
                     aria-label="Previous photo"
                     disabled={modalIdx === 0}
                   >
-                    <ChevronLeft size={28} />
+                    <ChevronLeft size={24} />
                   </button>
                   
-                  <div className="mx-4 flex-1 flex justify-center">
+                  <div className="mx-3 flex-1 flex justify-center">
                     <img
-                      src={photos[modalIdx].imageUrl}
-                      alt={photos[modalIdx].caption || "Alumni Photo"}
-                      className="max-h-[80vh] max-w-full object-contain rounded-md shadow-2xl"
+                      src={allPhotos[modalIdx].imageUrl}
+                      alt={allPhotos[modalIdx].caption || "Alumni Photo"}
+                      className="max-h-[75vh] max-w-full object-contain rounded-md shadow-xl"
                       loading="eager"
                     />
+                    <div className="absolute bottom-3 left-3 text-white bg-black/50 px-2 py-1 rounded text-sm">
+                      {allPhotos[modalIdx].sectionTitle}
+                    </div>
                   </div>
                   
                   <button
-                    className="text-white hover:text-[#a50303] bg-black/30 hover:bg-white/90 rounded-full p-3 focus:outline-none focus:ring-2 focus:ring-white/50 disabled:opacity-30 transition-all duration-200 transform hover:scale-110"
+                    className="text-white hover:text-[#a50303] bg-black/30 hover:bg-white/90 rounded-full p-2 focus:outline-none focus:ring-2 focus:ring-white/50 disabled:opacity-30 transition-all duration-200 transform hover:scale-105"
                     onClick={nextPhoto}
                     aria-label="Next photo"
-                    disabled={modalIdx === photos.length - 1}
+                    disabled={modalIdx === allPhotos.length - 1}
                   >
-                    <ChevronRight size={28} />
+                    <ChevronRight size={24} />
                   </button>
                 </div>
                 
-                <div className="absolute bottom-6 left-0 right-0 flex justify-center">
-                  <div className="flex space-x-1.5 px-4 py-2 bg-black/30 backdrop-blur-md rounded-full">
-                    {photos.map((_, idx) => (
+                <div className="absolute bottom-4 left-0 right-0 flex justify-center">
+                  <div className="flex space-x-1 px-3 py-1 bg-black/30 backdrop-blur-md rounded-full">
+                    {allPhotos.map((_, idx) => (
                       <button
                         key={idx}
                         onClick={(e) => {
                           e.stopPropagation();
                           setModalIdx(idx);
                         }}
-                        className={`w-2 h-2 rounded-full ${
+                        className={`w-1.5 h-1.5 rounded-full ${
                           modalIdx === idx ? "bg-white" : "bg-white/40 hover:bg-white/70"
                         } transition-all duration-200`}
                         aria-label={`Go to photo ${idx + 1}`}
