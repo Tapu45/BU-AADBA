@@ -79,7 +79,7 @@ export default function MembersPage() {
       <div className="flex items-center gap-4 mb-8">
         <span className="inline-block w-2 h-10 bg-[#800000] rounded-full"></span>
         <h1 className="text-3xl md:text-4xl font-extrabold text-[#800000] tracking-tight drop-shadow">
-          Alumni Members List
+          Alumni Directory
         </h1>
       </div>
       <div className="flex flex-col md:flex-row gap-8">
