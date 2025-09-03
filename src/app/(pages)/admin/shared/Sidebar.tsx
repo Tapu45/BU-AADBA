@@ -40,6 +40,7 @@ const links = [
   { name: "Newspaper Clippings", href: "/admin/newspapper-clippings", icon: <Newspaper size={22} /> },
   { name: "Notable Alumini", href: "/admin/notable-alumini", icon: <Gift size={22} /> },
   { name: "Visitors", href: "/admin/visitor", icon: <PersonStanding size={22} /> },
+  { name: "Conferences", href: "/admin/conference", icon: <MemoryStick size={22} /> },
 ];
 
 export default function Sidebar() {
