@@ -12,7 +12,7 @@ type NotableAlumni = {
 };
 
 const glanceStats = [
-  { label: "Postgraduate Students", value: 1200 },
+  { label: "Total Passout Students", value: 1200 },
   { label: "Faculty", value: 7 },
   { label: "Patents", value: 5 },
   { label: "Staff", value: 3 },

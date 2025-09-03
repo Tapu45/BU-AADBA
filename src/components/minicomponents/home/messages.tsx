@@ -33,7 +33,7 @@ Batch: 1988-90`,
     isIcon: false,
   },
   {
-    name: "Dr. Jitendra kumar sahu",
+    name: "Dr. Jitendra Kumar Sahu",
     title:
       "Secretary, Alumni Association, Department of Business Administration",
     intro:

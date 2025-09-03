@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const Hero: React.FC = () => {
   const images = [
+    "/assets/home.jpeg",
     "/Bu3.jpg",
     "/assets/events/past4.jpg",
     "/assets/alumini/inner-page.jpg",
@@ -81,7 +82,7 @@ const Hero: React.FC = () => {
           {/* Clean Description */}
           <div className="space-y-2 sm:space-y-3">
             <p className="text-base sm:text-lg md:text-2xl text-white mb-2 sm:mb-3 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-              BU alumni are changing the world or, at least, making it a little bit better, one graduate at a time.
+              MBA alumni are changing the world or, at least, making it a little bit better, one graduate at a time.
             </p>
             <p className="text-base sm:text-lg md:text-2xl text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
               Explore how life unfolds beyond the Hilltop.

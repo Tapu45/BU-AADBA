@@ -248,7 +248,7 @@ export default function AboutPage() {
                   },
                   {
                     role: "Treasurer",
-                    name: "Dr. Sunil Pradhan",
+                    name: "Dr. Sunil Kumar Pradhan",
                     years: "",
                     img: "/assets/leaders/image copy.png",
                   },
@@ -280,7 +280,7 @@ export default function AboutPage() {
               <div className="grid md:grid-cols-2 gap-6">
                 {[
                   {
-  name: "Dr. Suman Praharaj, Faculty-in-Charge, Placement Cell of the Department",
+  name: "Dr. Suman Kalyan Chaudhury, Faculty-in-Charge, Placement Cell of the Department",
   img: "/assets/executive/Suman.jpeg", // <-- Add your photo path here
 },
                   {
@@ -305,7 +305,7 @@ export default function AboutPage() {
                   },
                   {
                     name: "Mr. Ashyashree Praharaj (2016-18)",
-                    img: "https://randomuser.me/api/portraits/men/43.jpg",
+                    img: "/assets/executive/Praharaj.jpeg",
                   },
                   {
                     name: "Dr. Chandra Sekhar Pattanayak (1990-92)",
@@ -376,11 +376,11 @@ export default function AboutPage() {
               <div className="flex items-center gap-3 mb-4">
                 <BookOpen size={32} className="text-[#800000]" />
                 <h2 className="text-2xl md:text-3xl font-bold text-[#800000]">
-                  AABU Constitution 2025
+                  AADBA Constitution 2025
                 </h2>
               </div>
               <p className="text-gray-700 mb-2">
-                View the official AABU Constitution document:
+                View the official AADBA Constitution document:
               </p>
               <a
                 href="https://buodisha.edu.in/wp-content/uploads/2025/04/Minutes-of-the-General-Body-meeting-held-on-05.01.2025.pdf"
