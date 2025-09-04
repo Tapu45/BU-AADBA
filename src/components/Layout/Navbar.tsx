@@ -248,14 +248,14 @@ const Navbar: React.FC = () => {
                         className="block px-4 py-2.5 text-gray-700 hover:text-red-600 hover:bg-white/50 rounded-lg transition-all duration-200"
                         onClick={() => setShowMembersMenu(false)}
                       >
-                        Existing Members
+                        Existing Faculty Members
                       </Link>
                       <Link
                         href="/faculty-members/former"
                         className="block px-4 py-2.5 text-gray-700 hover:text-red-600 hover:bg-white/50 rounded-lg transition-all duration-200"
                         onClick={() => setShowMembersMenu(false)}
                       >
-                        Former Members
+                        Former Faculty Members
                       </Link>
                     </div>
                   </motion.div>

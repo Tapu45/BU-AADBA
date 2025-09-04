@@ -6,9 +6,9 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const Hero: React.FC = () => {
   const images = [
-    "/assets/home.jpeg",
+    // "/assets/home.jpeg",
     "/Bu3.jpg",
-    "/assets/events/past4.jpg",
+    // "/assets/events/past4.jpg",
     "/assets/alumini/inner-page.jpg",
     "/assets/events/IMG.jpg",
     "/assets/I_love_odisha.jpg",
