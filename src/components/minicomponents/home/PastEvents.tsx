@@ -4,45 +4,19 @@ import React, { useEffect, useState } from "react";
 
 const events = [
   {
-    image: "/assets/alumini/alumini1.jpeg",
-    caption: "Alumni Meet – Cherished moments and reunions.",
+    image: "/assets/flyers/1.jpeg",
+    caption: "",
   },
   {
-    image: "/assets/alumini/alumini2.jpeg",
-    caption: "Networking Session – Building connections for the future.",
+    image: "/assets/flyers/2.jpeg",
+    caption: "",
   },
   {
-    image: "/assets/alumini/alumini3.jpeg",
-    caption: "Panel Discussion – Alumni sharing their experiences.",
+    image: "/assets/flyers/image.png",
+    caption: "",
   },
-  {
-    image: "/assets/alumini/alumini4.jpeg",
-    caption: "Group Photo – Celebrating togetherness.",
-  },
-  {
-    image: "/assets/alumini/alumini5.jpg",
-    caption: "Sports Event – Alumni and students in action.",
-  },
-  {
-    image: "/assets/alumini/alumini6.jpeg",
-    caption: "Cultural Fest – Showcasing talent and heritage.",
-  },
-  {
-    image: "/assets/alumini/alumini7.jpeg",
-    caption: "Mentorship Program – Guiding the next generation.",
-  },
-  {
-    image: "/assets/alumini/alumini8.jpeg",
-    caption: "Award Ceremony – Honoring achievements.",
-  },
-  {
-    image: "/assets/alumini/alumini9.jpeg",
-    caption: "Interactive Workshop – Learning and growing together.",
-  },
-  {
-    image: "/assets/alumini/alumini10.jpeg",
-    caption: "Farewell Event – Memories to last a lifetime.",
-  },
+ 
+ 
 ];
 
 const AUTO_SLIDE_INTERVAL = 4000;

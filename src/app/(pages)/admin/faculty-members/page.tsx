@@ -37,10 +37,13 @@ export default function FacultyMembersAdminPage() {
   const [statusFilter, setStatusFilter] = useState<"ALL" | "EXISTING" | "FORMER">("ALL");
 
   const [showModal, setShowModal] = useState(false);
+  const [isEditing, setIsEditing] = useState(false); // New: Track if editing
+  const [editingId, setEditingId] = useState<string | null>(null); // New: Track editing ID
   const [form, setForm] = useState({
     name: "",
     designation: "",
     status: "EXISTING",
+    imageUrl: "", // New: Add imageUrl to form state
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -64,38 +67,63 @@ export default function FacultyMembersAdminPage() {
     statusFilter === "ALL" ? true : m.status === statusFilter
   );
 
-  async function handleCreate(e: React.FormEvent) {
+  // New: Reset modal states
+  function resetModal() {
+    setShowModal(false);
+    setIsEditing(false);
+    setEditingId(null);
+    setForm({ name: "", designation: "", status: "EXISTING", imageUrl: "" });
+    setImageFile(null);
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setUploading(true);
 
-    let imageUrl = "";
+    let finalImageUrl = form.imageUrl; // Start with existing or empty
     if (imageFile) {
       const fd = new FormData();
       fd.append("file", imageFile);
       const up = await fetch("/api/upload", { method: "POST", body: fd });
       const upData = await up.json();
-      imageUrl =
+      finalImageUrl =
         upData?.data?.secure_url || upData?.data?.url || upData?.data?.secureUrl || "";
     }
 
     try {
-      const res = await fetch("/api/admin/faculty-members", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: form.name,
-          designation: form.designation,
-          status: form.status,
-          imageUrl,
-        }),
-      });
-      if (res.ok) {
-        await fetchMembers();
-        setShowModal(false);
-        setForm({ name: "", designation: "", status: "EXISTING" });
-        setImageFile(null);
+      const payload = {
+        name: form.name,
+        designation: form.designation,
+        status: form.status,
+        imageUrl: finalImageUrl,
+      };
+
+      if (isEditing && editingId) {
+        // Edit: Use PUT
+        const res = await fetch("/api/admin/faculty-members", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: editingId, ...payload }),
+        });
+        if (res.ok) {
+          await fetchMembers();
+          resetModal();
+        } else {
+          console.error("Update failed", await res.text());
+        }
       } else {
-        console.error("Create failed", await res.text());
+        // Create: Use POST
+        const res = await fetch("/api/admin/faculty-members", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        if (res.ok) {
+          await fetchMembers();
+          resetModal();
+        } else {
+          console.error("Create failed", await res.text());
+        }
       }
     } catch (err) {
       console.error(err);
@@ -141,7 +169,10 @@ export default function FacultyMembersAdminPage() {
           <div className="flex items-center gap-3">
             <Button
               className="rounded-full font-semibold bg-[#a50303] hover:bg-[#c70c0c] shadow text-white px-5 py-2 flex items-center gap-2"
-              onClick={() => setShowModal(true)}
+              onClick={() => {
+                resetModal(); // Reset for create
+                setShowModal(true);
+              }}
               aria-label="Create Faculty Member"
             >
               <Plus className="w-4 h-4" /> Create New
@@ -149,7 +180,7 @@ export default function FacultyMembersAdminPage() {
           </div>
         </header>
 
-      <section className="bg-white rounded-xl border border-[#eaeaea] p-4 shadow">
+        <section className="bg-white rounded-xl border border-[#eaeaea] p-4 shadow">
           <div className="overflow-x-auto">
             <table className="w-full table-auto">
               <thead>
@@ -226,11 +257,13 @@ export default function FacultyMembersAdminPage() {
                           <Button
                             className="rounded-full border border-[#a50303] text-[#a50303] p-2 hover:bg-[#f8eaea]"
                             onClick={() => {
-                              setForm({ name: m.name, designation: m.designation, status: m.status });
+                              setIsEditing(true);
+                              setEditingId(m.id);
+                              setForm({ name: m.name, designation: m.designation, status: m.status, imageUrl: m.imageUrl || "" });
                               setImageFile(null);
                               setShowModal(true);
                             }}
-                            aria-label="Edit (prefill) member"
+                            aria-label="Edit member"
                           >
                             Edit
                           </Button>
@@ -254,7 +287,7 @@ export default function FacultyMembersAdminPage() {
         </section>
       </motion.div>
 
-      {/* Create / Prefill Modal */}
+      {/* Create / Edit Modal */}
       <AnimatePresence>
         {showModal && (
           <motion.div
@@ -264,7 +297,7 @@ export default function FacultyMembersAdminPage() {
             className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4"
             aria-modal="true"
             role="dialog"
-            onClick={() => setShowModal(false)}
+            onClick={() => resetModal()}
           >
             <motion.div
               initial={{ y: 24, opacity: 0 }}
@@ -275,18 +308,18 @@ export default function FacultyMembersAdminPage() {
             >
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold text-[#a50303] flex items-center gap-2">
-                  <ImagePlus className="w-5 h-5" /> Create Faculty Member
+                  <ImagePlus className="w-5 h-5" /> {isEditing ? "Edit" : "Create"} Faculty Member
                 </h2>
                 <button
                   aria-label="Close"
                   className="rounded-full p-2 hover:bg-[#f8eaea]"
-                  onClick={() => setShowModal(false)}
+                  onClick={() => resetModal()}
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
-              <form className="flex flex-col gap-3" onSubmit={handleCreate}>
+              <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
                 <label className="text-sm font-medium text-gray-700">Name</label>
                 <input
                   type="text"
@@ -333,10 +366,14 @@ export default function FacultyMembersAdminPage() {
                     />
                   </div>
 
-                  {imageFile && (
+                  {(imageFile || form.imageUrl) && (
                     <div className="w-16 h-16 rounded overflow-hidden border border-[#eaeaea]">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={URL.createObjectURL(imageFile)} alt="preview" className="w-full h-full object-cover" />
+                      <img
+                        src={imageFile ? URL.createObjectURL(imageFile) : form.imageUrl}
+                        alt="preview"
+                        className="w-full h-full object-cover"
+                      />
                     </div>
                   )}
                 </div>
@@ -345,11 +382,7 @@ export default function FacultyMembersAdminPage() {
                   <Button
                     type="button"
                     className="rounded-full border border-[#a50303] text-[#a50303] px-4 py-2"
-                    onClick={() => {
-                      setShowModal(false);
-                      setForm({ name: "", designation: "", status: "EXISTING" });
-                      setImageFile(null);
-                    }}
+                    onClick={() => resetModal()}
                   >
                     Cancel
                   </Button>
@@ -367,7 +400,7 @@ export default function FacultyMembersAdminPage() {
                     ) : (
                       <Plus className="w-4 h-4" />
                     )}
-                 {uploading ? "Creating..." : "Create"}
+                    {uploading ? (isEditing ? "Updating..." : "Creating...") : (isEditing ? "Update" : "Create")}
                   </Button>
                 </div>
               </form>
@@ -378,3 +411,4 @@ export default function FacultyMembersAdminPage() {
     </main>
   );
 }
+// ...existing code...
